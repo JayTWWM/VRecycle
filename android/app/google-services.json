@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "345630918788",
+    "project_id": "vrecycle-75962",
+    "storage_bucket": "vrecycle-75962.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345630918788:android:6ae5dfcdc2e985b0001ad1",
+        "android_client_info": {
+          "package_name": "com.spit.VRecycle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345630918788-p815u7jngjcgh8ftt3s3udv05hj0r477.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spit.VRecycle",
+            "certificate_hash": "4df58ced340c6a17c0fa53db48b3e6a511fd0e20"
+          }
+        },
+        {
+          "client_id": "345630918788-538qm3ii10c0uceoa4vrcoarf1pvps8t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy6PQXRL_6rfBUKMG6_gc9el_spu9uIkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345630918788-538qm3ii10c0uceoa4vrcoarf1pvps8t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
