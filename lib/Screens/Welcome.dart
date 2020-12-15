@@ -1,6 +1,8 @@
 import 'package:VRecycle/Components/FadeAnimations.dart';
 import 'package:VRecycle/Components/SliderAnimations.dart';
 import 'package:VRecycle/Constants/Colors.dart';
+import 'package:VRecycle/Screens/Profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -65,16 +67,22 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
     _scale2Controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
-    _scale2Animation =
-        Tween<double>(begin: 1.0, end: 32.0).animate(_scale2Controller)
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade, child: Slider_animated()));
-            }
-          });
+    _scale2Animation = Tween<double>(begin: 1.0, end: 32.0).animate(
+        _scale2Controller)
+      ..addStatusListener((status) async {
+        if (status == AnimationStatus.completed) {
+          final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+          if (user == null) {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade, child: Slider_animated()));
+          } else {
+            Navigator.push(context,
+                PageTransition(type: PageTransitionType.fade, child: Home()));
+          }
+        }
+      });
   }
 
   @override
