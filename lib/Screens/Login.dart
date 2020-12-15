@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 TextEditingController phoneController;
 TextEditingController passwordController;
@@ -262,8 +261,6 @@ class _LoginState extends State<Login> {
         user1 = user;
       }
       print(user1.uid);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('boolValue', true);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
       setState(() {

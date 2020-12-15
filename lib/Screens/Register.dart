@@ -12,7 +12,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 // import 'package:location/location.dart';
 import 'package:flutter/services.dart';
@@ -506,8 +505,6 @@ class _RegisterState extends State<Register> {
       }
       print(user1.uid);
       createUserInFireStore(user1);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setBool('boolValue', true);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Home()));
       setState(() {
