@@ -18,6 +18,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   bool hasLoaded = false;
   User currentUser;
+  Firestore _db = Firestore.instance;
   @override
   void initState() {
     super.initState();
@@ -31,16 +32,33 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HandleAuth()));
     } else {
-      var fireIns = Firestore.instance
+      var userDoc = await _db
           .collection('users')
-          .document(firebaseUser.phoneNumber.substring(3));
-      DocumentSnapshot doc = await fireIns.get();
-      User user = User.fromDocument(doc);
-      setState(() {
-        currentUser = user;
-        print(currentUser.address + " " + currentUser.email);
-        hasLoaded = true;
-      });
+          .document(firebaseUser.phoneNumber.substring(3))
+          .get();
+      if (userDoc.exists) {
+        var fireIns = _db
+            .collection('users')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          hasLoaded = true;
+        });
+      } else {
+        var fireIns = _db
+            .collection('collectors')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          hasLoaded = true;
+        });
+      }
     }
   }
 

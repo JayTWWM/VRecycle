@@ -17,7 +17,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 TextEditingController emailController;
-TextEditingController passwordController;
 TextEditingController nameController;
 TextEditingController locationController;
 TextEditingController phoneController;
@@ -59,7 +58,6 @@ class _RegisterState extends State<Register> {
   void initState() {
     super.initState();
     emailController = TextEditingController();
-    passwordController = TextEditingController();
     nameController = TextEditingController();
     locationController = TextEditingController();
     phoneController = TextEditingController();
@@ -72,7 +70,6 @@ class _RegisterState extends State<Register> {
   void dispose() {
     super.dispose();
     emailController.dispose();
-    passwordController.dispose();
     nameController.dispose();
     locationController.dispose();
     phoneController.dispose();
@@ -513,7 +510,6 @@ class _RegisterState extends State<Register> {
         mediaUrl = '';
         isloading = false;
       });
-      passwordController.clear();
       emailController.clear();
     } catch (e) {
       if (e is PlatformException) {
