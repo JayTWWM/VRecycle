@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/Loader.dart';
+import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -504,8 +505,8 @@ class _RegisterState extends State<Register> {
       createUserInFireStore(user1);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('boolValue', true);
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
       setState(() {
         s = 'Register';
         _image = null;
@@ -528,7 +529,6 @@ class _RegisterState extends State<Register> {
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
     await usersRef.document(phoneController.text).setData({
-      "id": user.uid,
       "email": emailController.text,
       // "password": passwordController.text, //only for testing purpose
       "name": nameController.text,

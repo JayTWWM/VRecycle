@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/Loader.dart';
+import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -267,8 +268,8 @@ class _LoginState extends State<Login> {
       print(user1.uid);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('boolValue', true);
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => MyMainPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));
       setState(() {
         s = 'login';
         isloading = false;
