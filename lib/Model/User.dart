@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class User {
   final String name;
@@ -6,20 +7,18 @@ class User {
   final String imageUrl;
   final String address;
   final String phonenumber;
-  final bool isCollector;
 
-  User(
-      {this.name,
-      this.imageUrl,
-      this.address,
-      this.phonenumber,
-      this.email,
-      this.isCollector});
+  User({
+    @required this.name,
+    @required this.imageUrl,
+    @required this.address,
+    @required this.phonenumber,
+    @required this.email,
+  });
 
   factory User.fromDocument(DocumentSnapshot doc) {
     return User(
       email: doc['email'],
-      isCollector: doc['isCollector'],
       name: doc['name'],
       imageUrl: doc['imageUrl'],
       address: doc['address'],

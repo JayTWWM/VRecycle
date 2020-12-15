@@ -25,6 +25,7 @@ bool isCollector = false;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 final usersRef = Firestore.instance.collection('users');
+final collectorsRef = Firestore.instance.collection('collectors');
 String s = 'Register';
 
 String mediaUrl = '';
@@ -233,7 +234,7 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom:
@@ -254,7 +255,7 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom:
@@ -280,7 +281,7 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           Container(
-                              padding: EdgeInsets.all(10),
+                              margin: EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   border: Border(
                                       bottom:
@@ -326,7 +327,7 @@ class _RegisterState extends State<Register> {
                                                   ),
                                                 ],
                                               ),
-                                              padding: EdgeInsets.symmetric(
+                                              margin: EdgeInsets.symmetric(
                                                   vertical: 6, horizontal: 10),
                                               child: Row(
                                                 children: [
@@ -397,7 +398,7 @@ class _RegisterState extends State<Register> {
                                 )),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            margin: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                                 border: Border(
                                     bottom:
@@ -418,7 +419,6 @@ class _RegisterState extends State<Register> {
                               maxLength: 10,
                               controller: phoneController,
                               decoration: InputDecoration(
-                                  border: InputBorder.none,
                                   hintText: "Phone Number",
                                   hintStyle: TextStyle(color: Colors.grey)),
                             ),
@@ -426,7 +426,6 @@ class _RegisterState extends State<Register> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
                     CheckboxListTile(
                       title: Text("I am a waste collector"),
                       value: isCollector,
@@ -528,15 +527,27 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
-    await usersRef.document(phoneController.text).setData({
-      "email": emailController.text,
-      // "password": passwordController.text, //only for testing purpose
-      "name": nameController.text,
-      "address": locationController.text,
-      "imageUrl": mediaUrl,
-      "isCollector": isCollector
-      // "phonenumber": phoneController.text,
-    });
+    if (isCollector) {
+      await usersRef.document(phoneController.text).setData({
+        "email": emailController.text,
+        // "password": passwordController.text, //only for testing purpose
+        "name": nameController.text,
+        "address": locationController.text,
+        "imageUrl": mediaUrl,
+        "isCollector": isCollector
+        // "phonenumber": phoneController.text,
+      });
+    } else {
+      await collectorsRef.document(phoneController.text).setData({
+        "email": emailController.text,
+        // "password": passwordController.text, //only for testing purpose
+        "name": nameController.text,
+        "address": locationController.text,
+        "imageUrl": mediaUrl,
+        "isCollector": isCollector
+        // "phonenumber": phoneController.text,
+      });
+    }
   }
 
   getUserLocation() async {

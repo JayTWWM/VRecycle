@@ -9,7 +9,7 @@ class AuthButton extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return InkResponse(
       onTap: () => onTap(),
       child: Container(
         decoration: BoxDecoration(

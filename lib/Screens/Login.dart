@@ -186,7 +186,7 @@ class _LoginState extends State<Login> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
                               border: Border(
                                   bottom: BorderSide(color: Colors.grey[200]))),
@@ -206,13 +206,9 @@ class _LoginState extends State<Login> {
                             maxLength: 10,
                             controller: phoneController,
                             decoration: InputDecoration(
-                                border: InputBorder.none,
                                 hintText: "Phone Number",
                                 hintStyle: TextStyle(color: Colors.grey)),
                           ),
-                        ),
-                        SizedBox(
-                          height: 30,
                         ),
                         AuthButton(
                           btnText: 'Login',
@@ -230,7 +226,6 @@ class _LoginState extends State<Login> {
                           },
                           isOutlined: false,
                         ),
-                        SizedBox(height: 10),
                         AuthButton(
                           btnText: "Don't Have an Account ?",
                           onTap: () => widget.onTap(),

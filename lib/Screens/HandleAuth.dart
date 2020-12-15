@@ -103,129 +103,135 @@ class _HandleAuthState extends State<HandleAuth> {
     }
 
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          AnimatedContainer(
-              curve: Curves.fastLinearToSlowEaseIn,
-              duration: Duration(milliseconds: 1700),
-              color: Colors.cyan,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _pageState = 0;
-                      });
-                    },
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          AnimatedContainer(
-                            curve: Curves.fastLinearToSlowEaseIn,
-                            duration: Duration(milliseconds: 1700),
-                            margin: EdgeInsets.only(
-                              top: _headingTop,
-                            ),
-                            child: Text(
-                              "VRecycle",
-                              style: TextStyle(
-                                  color: _headingColor,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.all(20),
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(
-                              "We provide waste management solutions!",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: _headingColor, fontSize: 16),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: Center(
-                      child: Image.asset("assets/images/splash_bg.png"),
-                    ),
-                  ),
-                  Container(
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (_pageState != 0) {
+      body: SingleChildScrollView(
+        child: Container(
+          child: Stack(
+            children: <Widget>[
+              AnimatedContainer(
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: Duration(milliseconds: 1700),
+                  color: Colors.cyan,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
                             _pageState = 0;
-                          } else {
-                            _pageState = 1;
-                          }
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(32),
-                        padding: EdgeInsets.all(20),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Color(0xFFB40284A),
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Center(
-                          child: Text(
-                            "Get Started",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          });
+                        },
+                        child: Container(
+                          child: Column(
+                            children: <Widget>[
+                              AnimatedContainer(
+                                curve: Curves.fastLinearToSlowEaseIn,
+                                duration: Duration(milliseconds: 1700),
+                                margin: EdgeInsets.only(
+                                  top: _headingTop,
+                                ),
+                                child: Text(
+                                  "VRecycle",
+                                  style: TextStyle(
+                                      color: _headingColor,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(20),
+                                padding: EdgeInsets.symmetric(horizontal: 32),
+                                child: Text(
+                                  "We provide waste management solutions!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: _headingColor, fontSize: 16),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 32),
+                                child: Center(
+                                  child: Image.asset(
+                                      "assets/images/splash_bg.png"),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                  )
-                ],
-              )),
-          AnimatedContainer(
-            padding: EdgeInsets.all(32),
-            width: _loginWidth,
-            height: _loginHeight,
-            curve: Curves.fastLinearToSlowEaseIn,
-            duration: Duration(milliseconds: 1700),
-            transform:
-                Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
-            decoration: BoxDecoration(
-                color: Colors.white.withOpacity(_loginOpacity),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25))),
-            child: Login(
-              onTap: () {
-                FocusScope.of(context).requestFocus(new FocusNode());
-                setState(() {
-                  _pageState = 2;
-                });
-              },
-            ),
+                      Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (_pageState != 0) {
+                                _pageState = 0;
+                              } else {
+                                _pageState = 1;
+                              }
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.all(32),
+                            padding: EdgeInsets.all(20),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Color(0xFFB40284A),
+                                borderRadius: BorderRadius.circular(50)),
+                            child: Center(
+                              child: Text(
+                                "Get Started",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
+              AnimatedContainer(
+                padding: EdgeInsets.all(32),
+                width: _loginWidth,
+                height: _loginHeight,
+                curve: Curves.fastLinearToSlowEaseIn,
+                duration: Duration(milliseconds: 1700),
+                transform:
+                    Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(_loginOpacity),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25))),
+                child: Login(
+                  onTap: () {
+                    FocusScope.of(context).requestFocus(new FocusNode());
+                    setState(() {
+                      _pageState = 2;
+                    });
+                  },
+                ),
+              ),
+              AnimatedContainer(
+                  height: _registerHeight,
+                  padding: EdgeInsets.symmetric(horizontal: 32),
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  duration: Duration(milliseconds: 1700),
+                  transform: Matrix4.translationValues(0, _registerYOffset, 1),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25))),
+                  child: Register(
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      setState(() {
+                        _pageState = 1;
+                      });
+                    },
+                  ))
+            ],
           ),
-          AnimatedContainer(
-              height: _registerHeight,
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              curve: Curves.fastLinearToSlowEaseIn,
-              duration: Duration(milliseconds: 1700),
-              transform: Matrix4.translationValues(0, _registerYOffset, 1),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25))),
-              child: Register(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  setState(() {
-                    _pageState = 1;
-                  });
-                },
-              ))
-        ],
+        ),
       ),
     );
   }
