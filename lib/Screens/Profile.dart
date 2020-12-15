@@ -18,6 +18,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    getuser();
   }
 
   getuser() async {
@@ -76,31 +77,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  // Hero(
-                                  //   tag: "hi",
-                                  //   child: AvatarGlow(
-                                  //     glowColor: Colors.white,
-                                  //     endRadius: 100,
-                                  //     child: Material(
-                                  //       elevation: 50.0,
-                                  //       shape: CircleBorder(),
-                                  //       child: Container(
-                                  //         width: 130,
-                                  //         height: 130,
-                                  //         decoration: BoxDecoration(
-                                  //             shape: BoxShape.circle,
-                                  //             image: DecorationImage(
-                                  //                 image: MemoryImage(
-                                  //                   base64Decode(
-                                  //                       currentUser.imageUrl),
-                                  //                 ),
-                                  //                 fit: BoxFit.cover)),
+                                  Hero(
+                                    tag: "hi",
+                                    child: AvatarGlow(
+                                      glowColor: Colors.white,
+                                      endRadius: 100,
+                                      child: Material(
+                                        elevation: 50.0,
+                                        shape: CircleBorder(),
+                                        child: Container(
+                                          width: 130,
+                                          height: 130,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  image: MemoryImage(
+                                                    base64Decode(
+                                                        currentUser.imageUrl),
+                                                  ),
+                                                  fit: BoxFit.cover)),
 
-                                  //         // ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                          // ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 16.0),
                                     child: new Column(

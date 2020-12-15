@@ -226,6 +226,7 @@ class _LoginState extends State<Login> {
                           },
                           isOutlined: false,
                         ),
+                        SizedBox(height: 10),
                         AuthButton(
                           btnText: "Don't Have an Account ?",
                           onTap: () => widget.onTap(),

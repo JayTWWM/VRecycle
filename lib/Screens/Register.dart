@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:VRecycle/Components/AuthButton.dart';
+import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
+import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -318,7 +320,8 @@ class _RegisterState extends State<Register> {
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
-                                                color: Colors.cyan,
+                                                color: Utils.getColor(
+                                                    primaryColor),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.black26,
@@ -327,7 +330,7 @@ class _RegisterState extends State<Register> {
                                                   ),
                                                 ],
                                               ),
-                                              margin: EdgeInsets.symmetric(
+                                              padding: EdgeInsets.symmetric(
                                                   vertical: 6, horizontal: 10),
                                               child: Row(
                                                 children: [
@@ -364,7 +367,9 @@ class _RegisterState extends State<Register> {
                                   children: <Widget>[
                                     Container(
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.cyan),
+                                        border: Border.all(
+                                            color:
+                                                Utils.getColor(primaryColor)),
                                         borderRadius: BorderRadius.circular(50),
                                       ),
                                       child: Row(
@@ -374,7 +379,8 @@ class _RegisterState extends State<Register> {
                                           _image == null
                                               ? Icon(
                                                   Icons.person_add,
-                                                  color: Colors.cyan,
+                                                  color: Utils.getColor(
+                                                      primaryColor),
                                                   size: 30,
                                                 )
                                               : Image.file(
@@ -387,7 +393,8 @@ class _RegisterState extends State<Register> {
                                             child: Text(
                                               'Select Profile Pic',
                                               style: TextStyle(
-                                                  color: Colors.cyan,
+                                                  color: Utils.getColor(
+                                                      primaryColor),
                                                   fontSize: 18),
                                             ),
                                           ),
@@ -426,17 +433,14 @@ class _RegisterState extends State<Register> {
                         ],
                       ),
                     ),
-                    CheckboxListTile(
-                      title: Text("I am a waste collector"),
-                      value: isCollector,
-                      onChanged: (val) {
-                        setState(() {
-                          isCollector = val;
-                        });
-                      },
-                      controlAffinity: ListTileControlAffinity
-                          .leading, //  <-- leading Checkbox
-                    ),
+                    CheckBox(
+                        btnText: 'I am a collector',
+                        val: isCollector,
+                        change: (val) {
+                          setState(() {
+                            isCollector = val;
+                          });
+                        }),
                     SizedBox(height: 20),
                     AuthButton(
                         btnText: 'Register',
@@ -456,7 +460,7 @@ class _RegisterState extends State<Register> {
                             _scaffoldKey.currentState.showSnackBar(SnackBar(
                               content: Text('Select an image for your Profile'),
                               duration: Duration(seconds: 2),
-                              backgroundColor: Colors.cyan,
+                              backgroundColor: Utils.getColor(primaryColor),
                             ));
                           }
                         }),

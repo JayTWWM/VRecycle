@@ -1,3 +1,4 @@
+import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Screens/Login.dart';
 import 'package:VRecycle/Screens/Register.dart';
 import 'package:flutter/cupertino.dart';
@@ -110,7 +111,7 @@ class _HandleAuthState extends State<HandleAuth> {
               AnimatedContainer(
                   curve: Curves.fastLinearToSlowEaseIn,
                   duration: Duration(milliseconds: 1700),
-                  color: Colors.cyan,
+                  color: Utils.getColor(primaryColor),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[

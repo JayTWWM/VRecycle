@@ -1,3 +1,4 @@
+import 'package:VRecycle/Constants/Colors.dart';
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
@@ -13,15 +14,17 @@ class AuthButton extends StatelessWidget {
       onTap: () => onTap(),
       child: Container(
         decoration: BoxDecoration(
-            border:
-                isOutlined ? Border.all(color: Colors.cyan, width: 2) : null,
-            color: isOutlined ? Colors.white : Colors.cyan,
+            border: isOutlined
+                ? Border.all(color: Utils.getColor(primaryColor), width: 2)
+                : null,
+            color: isOutlined ? Colors.white : Utils.getColor(primaryColor),
             borderRadius: BorderRadius.circular(50)),
         padding: EdgeInsets.all(isOutlined ? 13 : 15),
         child: Center(
           child: Text(btnText,
               style: TextStyle(
-                  color: !isOutlined ? Colors.white : Colors.cyan,
+                  color:
+                      !isOutlined ? Colors.white : Utils.getColor(primaryColor),
                   fontSize: 16,
                   fontWeight: FontWeight.bold)),
         ),
