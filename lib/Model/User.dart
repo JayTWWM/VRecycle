@@ -6,13 +6,13 @@ class User {
   final String email;
   final String imageUrl;
   final String address;
-  final String phonenumber;
+  // final String phonenumber;
 
   User({
     @required this.name,
     @required this.imageUrl,
     @required this.address,
-    @required this.phonenumber,
+    // @required this.phonenumber,
     @required this.email,
   });
 
@@ -22,7 +22,7 @@ class User {
       name: doc['name'],
       imageUrl: doc['imageUrl'],
       address: doc['address'],
-      phonenumber: doc['phonenumber'],
+      // phonenumber: doc['phonenumber'],
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 
 TextEditingController phoneController;
 TextEditingController passwordController;
@@ -260,13 +261,16 @@ class _LoginState extends State<Login> {
       } else {
         user1 = user;
       }
-      print(user1.uid);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
-      setState(() {
-        s = 'login';
-        isloading = false;
-      });
+      if (user1 != null) {
+        Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: Home()));
+      } else {
+        print(user1.uid);
+      }
+      // setState(() {
+      //   s = 'login';
+      //   isloading = false;
+      // });
       phoneController.clear();
     } catch (e) {
       if (e is PlatformException) {

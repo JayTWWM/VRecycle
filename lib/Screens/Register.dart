@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 // import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 
 TextEditingController emailController;
 TextEditingController nameController;
@@ -500,17 +501,10 @@ class _RegisterState extends State<Register> {
       } else {
         user1 = user;
       }
-      print(user1.uid);
+      // print(user1.uid);
       createUserInFireStore(user1);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
-      setState(() {
-        s = 'Register';
-        _image = null;
-        mediaUrl = '';
-        isloading = false;
-      });
-      emailController.clear();
+      Navigator.push(context,
+          PageTransition(type: PageTransitionType.fade, child: Home()));
     } catch (e) {
       if (e is PlatformException) {
         handleError(e);
@@ -524,14 +518,14 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
-    if (isCollector) {
+    if (isCollector == false) {
       await usersRef.document(phoneController.text).setData({
         "email": emailController.text,
         // "password": passwordController.text, //only for testing purpose
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "isCollector": isCollector
+        // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
     } else {
@@ -541,7 +535,7 @@ class _RegisterState extends State<Register> {
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "isCollector": isCollector
+        // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
     }
