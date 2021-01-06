@@ -26,7 +26,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   getuser() async {
-    print('started');
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser == null) {
       Navigator.pushReplacement(
@@ -152,22 +151,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                         ),
                                                       ),
                                                       Container(
-                                                        width: 120,
+                                                        width: 180,
                                                         child: new Text(
                                                           currentUser.email,
-                                                          style: new TextStyle(
-                                                              fontSize: 14.0,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 120,
-                                                        child: new Text(
-                                                          currentUser.name,
                                                           style: new TextStyle(
                                                               fontSize: 14.0,
                                                               color:
