@@ -22,12 +22,15 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
   bool hasLoaded = false;
   User currentUser;
   Firestore _db = Firestore.instance;
+  Widget otherHandler;
   final itemsRef = Firestore.instance.collection('items');
   List<Items> items = [];
+  TextEditingController itemController =
+      TextEditingController(text: 'Batteries');
   TextEditingController numberController = TextEditingController();
   TextEditingController weightController = TextEditingController();
   List<String> documentID = [];
-  String option = '';
+  String option = 'Batteries';
   void getUser() async {
     User user = await UserProperties.getUser();
     setState(() {
@@ -41,6 +44,7 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     getUser();
+    otherHandler = Container();
   }
 
   Future<void> getItemsofUser() async {
@@ -62,11 +66,25 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
   }
 
   Future<void> addItemsinFirestore() async {
-    await itemsRef.document().setData({
-      "category": option,
+    DocumentReference docRef = await itemsRef.add({
+      "category": itemController.text,
       "number of samples": int.parse(numberController.text.trim()),
       "weight": int.parse(weightController.text.trim()),
       "user": currentUser.name
+    });
+    setState(() {
+      Items itemsAdded = Items(
+          option: itemController.text,
+          name: currentUser.name,
+          number: int.parse(numberController.text.trim()),
+          weight: int.parse(weightController.text.trim()));
+      items.add(itemsAdded);
+      option = "Batteries";
+      itemController.text = "Batteries";
+      numberController.clear();
+      weightController.clear();
+      otherHandler = Container();
+      documentID.add(docRef.documentID);
     });
   }
 
@@ -76,8 +94,11 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
         body: hasLoaded
             ? Column(
                 children: [
+                  Padding(padding: EdgeInsets.all(10)),
                   new DropdownButton<String>(
-                    items: <String>['Batteries', 'Monitors', 'Disks']
+                    hint: Text("Select Your Item"),
+                    value: option,
+                    items: <String>['Batteries', 'Monitors', 'Disks', 'Other']
                         .map((String value) {
                       return new DropdownMenuItem<String>(
                         value: value,
@@ -87,33 +108,62 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
                     onChanged: (String val) {
                       setState(() {
                         option = val;
+                        itemController.text = val;
+                        if (val == 'Other') {
+                          otherHandler = Expanded(
+                              child: SizedBox(
+                            height: 40.0,
+                            child: TextFormField(
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                  hintText: "Mention your item"),
+                              controller: itemController,
+                            ),
+                          ));
+                        } else {
+                          otherHandler = Container();
+                        }
                       });
                     },
                   ),
+                  Padding(padding: EdgeInsets.all(10)),
+                  new Row(
+                    children: [
+                      Padding(padding: EdgeInsets.all(10)),
+                      otherHandler,
+                      Padding(padding: EdgeInsets.all(10)),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(10)),
                   new Row(
                     children: <Widget>[
-                      Expanded(
-                          child: SizedBox(
-                        height: 200.0,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          decoration:
-                              InputDecoration(prefixIcon: Text("How many?")),
-                          controller: numberController,
-                        ),
-                      )),
+                      Padding(padding: EdgeInsets.all(10)),
                       Expanded(
                           child: SizedBox(
                         height: 40.0,
                         child: TextFormField(
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                              prefixIcon: Text("Approximate weight")),
+                            hintText: "How many?",
+                          ),
+                          controller: numberController,
+                        ),
+                      )),
+                      Padding(padding: EdgeInsets.all(10)),
+                      Expanded(
+                          child: SizedBox(
+                        height: 40.0,
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration:
+                              InputDecoration(hintText: "Approximate weight"),
                           controller: weightController,
                         ),
-                      ))
+                      )),
+                      Padding(padding: EdgeInsets.all(10)),
                     ],
                   ),
+                  Padding(padding: EdgeInsets.all(10)),
                   AuthButton(
                     btnText: 'Add Item',
                     onTap: () async {
@@ -180,6 +230,11 @@ class _AddItemsState extends State<AddItems> with TickerProviderStateMixin {
                                                                 documentID[
                                                                     index])
                                                             .delete();
+                                                        setState(() {
+                                                          items.removeAt(index);
+                                                          documentID
+                                                              .removeAt(index);
+                                                        });
                                                       },
                                                       child: Icon(
                                                         Icons.delete,

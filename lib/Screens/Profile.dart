@@ -138,7 +138,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Container(
-                                                        width: 120,
+                                                        width: 100,
                                                         child: new Text(
                                                           currentUser.name,
                                                           style: new TextStyle(
@@ -151,7 +151,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                         ),
                                                       ),
                                                       Container(
-                                                        width: 180,
+                                                        width: 150,
                                                         child: new Text(
                                                           currentUser.email,
                                                           style: new TextStyle(
