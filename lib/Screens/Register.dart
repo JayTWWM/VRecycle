@@ -4,7 +4,7 @@ import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Constants/Colors.dart';
-import 'package:VRecycle/Screens/Drawer.dart';
+import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -505,7 +505,7 @@ class _RegisterState extends State<Register> {
       // print(user1.uid);
       createUserInFireStore(user1);
       Navigator.push(context,
-          PageTransition(type: PageTransitionType.fade, child: NavDrawer()));
+          PageTransition(type: PageTransitionType.fade, child: Home()));
     } catch (e) {
       if (e is PlatformException) {
         handleError(e);

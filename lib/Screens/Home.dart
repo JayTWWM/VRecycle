@@ -1,35 +1,32 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'package:VRecycle/Components/CircularImage.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Components/MyClipper.dart';
 import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/User.dart';
-import 'package:VRecycle/Screens/AddItems.dart';
+import 'package:VRecycle/Screens/ItemsPage.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class NavDrawer extends StatefulWidget {
-  NavDrawer({Key key, this.title}) : super(key: key);
-  final String title;
-
+class Home extends StatefulWidget {
   @override
-  _NavDrawerState createState() => _NavDrawerState();
+  _HomeState createState() => _HomeState();
 }
 
-String title = "Drawer";
-User currentUser;
-bool load = false;
-List<String> categories = [];
-
-class _NavDrawerState extends State<NavDrawer> {
+class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
     getUser();
   }
+
+  String title = 'Profile';
+  User currentUser;
+  bool load = false;
+  List<String> categories = [];
 
   Future<void> getUser() async {
     FirebaseUser user1 = await FirebaseAuth.instance.currentUser();
@@ -220,8 +217,8 @@ class _NavDrawerState extends State<NavDrawer> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  mainWidget = AddItems();
-                                  title = "Profile";
+                                  mainWidget = ItemsPage();
+                                  title = "Items Page";
                                 });
                                 Navigator.pop(context);
                               }),
@@ -252,27 +249,5 @@ class _NavDrawerState extends State<NavDrawer> {
                       ]),
                 )),
             body: mainWidget);
-  }
-}
-
-class CircularImage extends StatelessWidget {
-  final double _width, _height;
-  final ImageProvider image;
-  Uint8List bytes;
-
-  CircularImage(this.image, {double width = 50, double height = 50})
-      : _width = width,
-        _height = height;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: _width,
-      height: _height,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(image: image, fit: BoxFit.cover),
-      ),
-    );
   }
 }
