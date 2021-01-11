@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
     getUser();
   }
 
-  String title = 'Profile';
+  String title = 'Items Page';
   User currentUser;
   bool load = false;
   List<String> categories = [];
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget mainWidget = Home();
+  Widget mainWidget = ItemsPage();
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +194,7 @@ class _HomeState extends State<Home> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  mainWidget = Home();
+                                  mainWidget = Profile();
                                   title = "Profile";
                                 });
                                 Navigator.pop(context);
