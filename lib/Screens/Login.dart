@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/Loader.dart';
+import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';

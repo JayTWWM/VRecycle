@@ -9,12 +9,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
-class Home extends StatefulWidget {
+class Profile extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ProfileState createState() => _ProfileState();
 }
 
-class _HomeState extends State<Home> with TickerProviderStateMixin {
+class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   bool hasLoaded = false;
   User currentUser;
@@ -26,7 +26,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   getuser() async {
-    print('started');
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser == null) {
       Navigator.pushReplacement(
@@ -64,9 +63,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Color.fromRGBO(3, 9, 23, 1),
-        body: hasLoaded
+    return Expanded(
+        child: hasLoaded
             ? SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -139,7 +137,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Container(
-                                                        width: 120,
+                                                        width: 100,
                                                         child: new Text(
                                                           currentUser.name,
                                                           style: new TextStyle(
@@ -152,22 +150,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                         ),
                                                       ),
                                                       Container(
-                                                        width: 120,
+                                                        width: 150,
                                                         child: new Text(
                                                           currentUser.email,
-                                                          style: new TextStyle(
-                                                              fontSize: 14.0,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 120,
-                                                        child: new Text(
-                                                          currentUser.name,
                                                           style: new TextStyle(
                                                               fontSize: 14.0,
                                                               color:
