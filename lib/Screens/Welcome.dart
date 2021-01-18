@@ -1,7 +1,6 @@
 import 'package:VRecycle/Components/FadeAnimations.dart';
 import 'package:VRecycle/Components/SliderAnimations.dart';
 import 'package:VRecycle/Constants/Colors.dart';
-import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

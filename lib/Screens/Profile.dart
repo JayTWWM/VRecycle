@@ -9,12 +9,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
-class Profile extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _ProfileState createState() => _ProfileState();
+  _HomeState createState() => _HomeState();
 }
 
-class _ProfileState extends State<Profile> with TickerProviderStateMixin {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   bool hasLoaded = false;
   User currentUser;
@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   }
 
   getuser() async {
+    print('started');
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser == null) {
       Navigator.pushReplacement(
@@ -63,8 +64,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: hasLoaded
+    return Scaffold(
+        backgroundColor: Color.fromRGBO(3, 9, 23, 1),
+        body: hasLoaded
             ? SingleChildScrollView(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -137,7 +139,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         MainAxisSize.min,
                                                     children: <Widget>[
                                                       Container(
-                                                        width: 100,
+                                                        width: 120,
                                                         child: new Text(
                                                           currentUser.name,
                                                           style: new TextStyle(
@@ -150,9 +152,22 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         ),
                                                       ),
                                                       Container(
-                                                        width: 150,
+                                                        width: 120,
                                                         child: new Text(
                                                           currentUser.email,
+                                                          style: new TextStyle(
+                                                              fontSize: 14.0,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: 120,
+                                                        child: new Text(
+                                                          currentUser.name,
                                                           style: new TextStyle(
                                                               fontSize: 14.0,
                                                               color:
