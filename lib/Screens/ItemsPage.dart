@@ -4,7 +4,9 @@ import 'package:VRecycle/Components/ItemWidget.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/Item.dart';
+import 'package:VRecycle/Screens/CheckOut.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ItemsPage extends StatefulWidget {
@@ -16,10 +18,7 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    serialNo = 0;
     getPrefs();
-    // itemName = '';
-    // itemDesc = '';
     counter = 0;
     cart = [];
     itemTiles = [];
@@ -28,36 +27,64 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
 
   void getPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    if (_prefs.containsKey('Serial')) {
-      serialNo = _prefs.getInt('Serial');
+    if (_prefs.containsKey('Items')) {
       setState(() {
-        for (int i = 0; i < serialNo; i++) {
-          if (_prefs.containsKey('$i')) {
-            print(_prefs.getString('$i'));
-            Map<String, dynamic> temp = json.decode(_prefs.getString('$i'));
-            Item item = new Item(
-                serialNo: temp['serialNo'],
-                itemName: temp['itemName'],
-                desc: temp['desc'],
-                quantity: temp['quantity']);
-            cart.add(item);
-            itemTiles.add(Dismissible(
-              background: Container(color: Colors.red),
-              key: Key(item.itemName),
-              onDismissed: (direction) {
-                deleteItem(i);
-                Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text("${item.itemName} deleted")));
-              },
-              child: ItemWidget(
-                item: item,
-              ),
-            ));
-          }
+        List<String> temp = _prefs.getStringList('Items');
+        for (int i = 0; i < temp.length; i++) {
+          String a = temp[i];
+          Map<String, dynamic> mapper = json.decode(a);
+          Item item = new Item(
+              itemName: mapper['itemName'],
+              desc: mapper['desc'],
+              quantity: mapper['quantity']);
+          cart.add(item);
+          itemTiles.add(Dismissible(
+            background: Container(color: Colors.red),
+            key: Key(item.itemName),
+            onDismissed: (direction) {
+              deleteItem(i);
+              Scaffold.of(context).showSnackBar(
+                  SnackBar(content: Text("${item.itemName} deleted")));
+            },
+            child: ItemWidget(
+              item: item,
+            ),
+          ));
         }
-        isLoaded = false;
       });
     }
+    // if (_prefs.containsKey('Serial')) {
+    //   serialNo = _prefs.getInt('Serial');
+    //   setState(() {
+    //     for (int i = 0; i < serialNo; i++) {
+    //       if (_prefs.containsKey('$i')) {
+    //         print(_prefs.getString('$i'));
+    //         Map<String, dynamic> temp = json.decode(_prefs.getString('$i'));
+    // Item item = new Item(
+    //     serialNo: temp['serialNo'],
+    //     itemName: temp['itemName'],
+    //     desc: temp['desc'],
+    //     quantity: temp['quantity']);
+    // cart.add(item);
+    //         itemTiles.add(Dismissible(
+    //           background: Container(color: Colors.red),
+    //           key: Key(item.itemName),
+    //           onDismissed: (direction) {
+    //             deleteItem(i);
+    //             Scaffold.of(context).showSnackBar(
+    //                 SnackBar(content: Text("${item.itemName} deleted")));
+    //           },
+    //           child: ItemWidget(
+    //             item: item,
+    //           ),
+    //         ));
+    //   }
+    // }
+    // isLoaded = false;
+    //   });
+    setState(() {
+      isLoaded = false;
+    });
   }
 
   bool isLoaded;
@@ -69,7 +96,6 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
   // String itemName;
   // String itemDesc;
   int counter;
-  int serialNo;
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +106,26 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
               children: [
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.all(20),
-                    color: Utils.getColor(primaryColor),
-                    child: ListView(
-                      children: itemTiles,
-                    ),
-                  ),
+                      padding: EdgeInsets.all(20),
+                      color: Utils.getColor(primaryColor),
+                      child: ListView.builder(
+                        itemCount: cart.length,
+                        itemBuilder: (context, i) {
+                          return Dismissible(
+                            background: Container(color: Colors.red),
+                            key: Key(cart[i].itemName),
+                            onDismissed: (direction) {
+                              deleteItem(i);
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content:
+                                      Text("${cart[i].itemName} deleted")));
+                            },
+                            child: ItemWidget(
+                              item: cart[i],
+                            ),
+                          );
+                        },
+                      )),
                 ),
                 Container(
                   color: Colors.white,
@@ -231,7 +271,6 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
                               btnText: 'Add Item',
                               onTap: () async {
                                 Item item = new Item(
-                                    serialNo: serialNo,
                                     itemName: nameController.text.trim(),
                                     desc: descController.text.trim(),
                                     quantity: counter);
@@ -245,11 +284,19 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
                             padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                             child: AuthButton(
                               isOutlined: true,
-                              btnText: 'Clear Cart',
+                              btnText: 'Place an Order',
                               onTap: () {
-                                setState(() {
-                                  clearCart();
-                                });
+                                // clearCart();
+                                cart.length == 0
+                                    ? Scaffold.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text("Your cart is empty/")))
+                                    : Navigator.push(
+                                        context,
+                                        PageTransition(
+                                            type: PageTransitionType.fade,
+                                            child: CheckOutPage(cart: cart)));
                               },
                             ),
                           )
@@ -263,13 +310,26 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
           );
   }
 
-  void addItem(Item item) async {
+  void addItem(Item item) {
     setState(() {
+      isLoaded = true;
+    });
+    setState(() {
+      List<String> temp;
+      if (_prefs.containsKey('Items')) {
+        temp = _prefs.getStringList('Items');
+      } else {
+        temp = [];
+      }
+      int ind = temp.length;
+      temp.add(item.toJson());
+      _prefs.setStringList('Items', temp);
+      cart.add(item);
       itemTiles.add(Dismissible(
         background: Container(color: Colors.red),
         key: Key(item.itemName),
         onDismissed: (direction) {
-          deleteItem(serialNo);
+          deleteItem(ind);
           Scaffold.of(context).showSnackBar(
               SnackBar(content: Text("${item.itemName} deleted")));
         },
@@ -277,27 +337,60 @@ class _ItemsPageState extends State<ItemsPage> with TickerProviderStateMixin {
           item: item,
         ),
       ));
-      print(item.toJson());
-      _prefs.setString('$serialNo', item.toJson());
-      serialNo++;
-      _prefs.setInt('Serial', serialNo);
       counter = 0;
       nameController.clear();
       descController.clear();
       FocusManager.instance.primaryFocus.unfocus();
-      // itemDesc = '';
-      // itemName = '';
+      isLoaded = false;
+
+      print(cart.length);
+      print(itemTiles.length);
     });
+
+    // setState(() {
+    // itemTiles.add(Dismissible(
+    //   background: Container(color: Colors.red),
+    //   key: Key(item.itemName),
+    //   onDismissed: (direction) {
+    //     deleteItem(serialNo);
+    //     Scaffold.of(context).showSnackBar(
+    //         SnackBar(content: Text("${item.itemName} deleted")));
+    //   },
+    //   child: ItemWidget(
+    //     item: item,
+    //   ),
+    // ));
+    //   print(item.toJson());
+    //   _prefs.setString('$serialNo', item.toJson());
+    //   serialNo++;
+    //   _prefs.setInt('Serial', serialNo);
+    // counter = 0;
+    // nameController.clear();
+    // descController.clear();
+    // FocusManager.instance.primaryFocus.unfocus();
+    //   // itemDesc = '';
+    //   // itemName = '';
+    // });
   }
 
   void clearCart() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     await _prefs.clear();
+    setState(() {
+      cart.clear();
+      itemTiles.clear();
+    });
   }
 
   void deleteItem(int ind) {
-    _prefs.remove('$ind');
+    List<String> temp = _prefs.getStringList('Items');
+    temp.removeAt(ind);
     cart.removeAt(ind);
     itemTiles.removeAt(ind);
+    _prefs.setStringList('Items', temp);
+    setState(() {
+      print(cart.length);
+      print(itemTiles.length);
+    });
   }
 }

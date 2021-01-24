@@ -32,6 +32,7 @@ dependencies:
   shared_preferences: ^0.5.7+3
   keyboard_visibility: ^0.5.6
   avatar_glow: 1.2.0
+  datetime_picker_formfield: ^1.0.0
   flutter:
     sdk: flutter
 
