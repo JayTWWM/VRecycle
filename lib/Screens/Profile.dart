@@ -63,7 +63,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
         child: hasLoaded
             ? SingleChildScrollView(
                 child: Column(

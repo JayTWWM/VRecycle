@@ -13,13 +13,18 @@ class ItemWidget extends StatefulWidget {
 class _ItemWidgetState extends State<ItemWidget> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text('${widget.item.itemName}'),
-          Text('${widget.item.desc}'),
-          Text('${widget.item.quantity}'),
-        ],
+    return Card(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        margin: EdgeInsets.all(5),
+        child: Column(
+          children: [
+            Text('${widget.item.itemName}'),
+            Text('${widget.item.desc}'),
+            Text('${widget.item.quantity}'),
+          ],
+        ),
       ),
     );
   }

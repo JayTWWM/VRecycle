@@ -72,7 +72,6 @@ class _HomeState extends State<Home> {
     return load == false
         ? Loader()
         : Scaffold(
-            backgroundColor: Colors.blue,
             appBar: AppBar(
               backgroundColor: Utils.getColor(primaryColor),
               elevation: 0.0,
