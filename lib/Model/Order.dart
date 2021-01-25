@@ -3,7 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Order {
-  String phoneNumber;
+  String phoneNumberUser;
+  String phoneNumberCollector;
   List<Item> items;
   double approxWeight;
   Timestamp timestamp;
@@ -11,10 +12,10 @@ class Order {
   String address;
   String proof;
   String status;
-  String category;
 
   Order({
-    @required this.phoneNumber,
+    @required this.phoneNumberUser,
+    @required this.phoneNumberCollector,
     @required this.items,
     @required this.approxWeight,
     @required this.timestamp,
@@ -22,20 +23,19 @@ class Order {
     @required this.address,
     @required this.proof,
     @required this.status,
-    @required this.category,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'phoneNumber': this.phoneNumber,
+      'phoneNumberUser': this.phoneNumberUser,
+      'phoneNumberCollector': this.phoneNumberCollector,
       'items': this.items,
       'approxWeight': this.approxWeight,
       'timestamp': this.timestamp,
       'location': this.location,
       'address': this.address,
       'proof': this.proof,
-      'status': this.status,
-      'category': this.category,
+      'status': this.status
     };
   }
 }

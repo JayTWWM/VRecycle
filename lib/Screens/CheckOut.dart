@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:VRecycle/Components/DateTimePicker.dart';
 import 'package:VRecycle/Screens/CheckOut.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/Loader.dart';
@@ -21,6 +22,7 @@ class CheckOutPage extends StatefulWidget {
 }
 
 class _CheckOutPageState extends State<CheckOutPage> {
+  Firestore _db = Firestore.instance;
   TextEditingController weightController = TextEditingController();
   File _image;
   TextEditingController locationController = TextEditingController();
@@ -45,6 +47,10 @@ class _CheckOutPageState extends State<CheckOutPage> {
     } catch (e) {
       print("Unable to get Location.");
     }
+  }
+
+  String getCollector() {
+    return '7506604268';
   }
 
   @override
@@ -131,30 +137,41 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       ],
                     ),
                   ),
-                  DateTimeField(
-                    format: format,
-                    onShowPicker: (context, currentValue) async {
-                      final date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(
-                              currentValue ?? DateTime.now()),
-                        );
-                        setState(() {
-                          userDateTime = DateTimeField.combine(date, time);
-                        });
-                      } else {
-                        setState(() {
-                          userDateTime = currentValue;
-                        });
-                      }
-                      return userDateTime;
-                    },
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text("Choose pickup date and time:"),
+                        DateTimeField(
+                          initialValue: DateTime.now(),
+                          format: format,
+                          onShowPicker: (context, currentValue) async {
+                            final date = await showDatePicker(
+                                context: context,
+                                firstDate: DateTime(1900),
+                                initialDate: currentValue ?? DateTime.now(),
+                                lastDate: DateTime(2100));
+                            if (date != null) {
+                              final time = await showTimePicker(
+                                context: context,
+                                initialTime: TimeOfDay.fromDateTime(
+                                    currentValue ?? DateTime.now()),
+                              );
+                              setState(() {
+                                userDateTime =
+                                    DateTimeField.combine(date, time);
+                              });
+                            } else {
+                              setState(() {
+                                userDateTime = currentValue;
+                              });
+                            }
+                            return userDateTime;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   Column(
                     children: [
@@ -165,15 +182,10 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            print(locationController.toString() +
-                                " " +
-                                weightController.toString() +
-                                " " +
-                                userDateTime.toString() +
-                                " " +
-                                latitude +
-                                " " +
-                                longitude);
+                            await _db
+                                .collection('Orders')
+                                .document()
+                                .setData({});
                           },
                         ),
                       ),
