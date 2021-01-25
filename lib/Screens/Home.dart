@@ -27,32 +27,52 @@ class _HomeState extends State<Home> {
   User currentUser;
   bool load = false;
   List<String> categories = [];
+  Firestore _db = Firestore.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   Future<void> getUser() async {
-    FirebaseUser user1 = await FirebaseAuth.instance.currentUser();
-    var fireIns = Firestore.instance
-        .collection('users')
-        .document(user1.phoneNumber.substring(3));
-    DocumentSnapshot doc = await fireIns.get();
-    User user = User.fromDocument(doc);
-    await getDrawer();
-    setState(() {
-      currentUser = user;
-      load = true;
-    });
+    final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+    var userDoc = await _db
+          .collection('Users')
+          .document(firebaseUser.phoneNumber.substring(3))
+          .get();
+      if (userDoc.exists) {
+        var fireIns = _db
+            .collection('Users')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          load = true;
+        });
+      } else {
+        var fireIns = _db
+            .collection('Collectors')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        print(doc.data);
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          load = true;
+        });
+      }
     return null;
   }
 
-  getDrawer() async {
-    await Firestore.instance.collection("Templates").getDocuments().then((ds) {
-      if (ds != null) {
-        ds.documents.forEach((value) {
-          categories.add(value.documentID);
-        });
-      }
-    });
-    ;
-  }
+  // getDrawer() async {
+  //   await Firestore.instance.collection("Templates").getDocuments().then((ds) {
+  //     if (ds != null) {
+  //       ds.documents.forEach((value) {
+  //         categories.add(value.documentID);
+  //       });
+  //     }
+  //   });
+  //   ;
+  // }
 
   Widget appBarIcon({@required IconData icon}) {
     return IconButton(
@@ -65,7 +85,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget mainWidget = ItemsPage();
+  Widget mainWidget = Profile();
 
   @override
   Widget build(BuildContext context) {

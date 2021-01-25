@@ -32,12 +32,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           context, MaterialPageRoute(builder: (context) => HandleAuth()));
     } else {
       var userDoc = await _db
-          .collection('users')
+          .collection('Users')
           .document(firebaseUser.phoneNumber.substring(3))
           .get();
       if (userDoc.exists) {
         var fireIns = _db
-            .collection('users')
+            .collection('Users')
             .document(firebaseUser.phoneNumber.substring(3));
         DocumentSnapshot doc = await fireIns.get();
         User user = User.fromDocument(doc);
@@ -48,9 +48,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         });
       } else {
         var fireIns = _db
-            .collection('collectors')
+            .collection('Collectors')
             .document(firebaseUser.phoneNumber.substring(3));
         DocumentSnapshot doc = await fireIns.get();
+        print(doc.data);
         User user = User.fromDocument(doc);
         setState(() {
           currentUser = user;
@@ -140,6 +141,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         width: 100,
                                                         child: new Text(
                                                           currentUser.name,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: new TextStyle(
                                                               fontSize: 26.0,
                                                               color:
@@ -153,6 +157,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         width: 150,
                                                         child: new Text(
                                                           currentUser.email,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                           style: new TextStyle(
                                                               fontSize: 14.0,
                                                               color:

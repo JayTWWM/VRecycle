@@ -26,8 +26,8 @@ TextEditingController reraController;
 bool isCollector = false;
 
 final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-final usersRef = Firestore.instance.collection('users');
-final collectorsRef = Firestore.instance.collection('collectors');
+final usersRef = Firestore.instance.collection('Users');
+final collectorsRef = Firestore.instance.collection('Collectors');
 String s = 'Register';
 
 String mediaUrl = '';
@@ -504,8 +504,12 @@ class _RegisterState extends State<Register> {
       }
       // print(user1.uid);
       createUserInFireStore(user1);
-      Navigator.push(context,
-          PageTransition(type: PageTransitionType.fade, child: Home()));
+      if (isCollector) {
+        //Collector's side
+      } else {
+        Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: Home()));
+      }
     } catch (e) {
       if (e is PlatformException) {
         handleError(e);

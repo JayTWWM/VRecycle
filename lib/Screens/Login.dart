@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:VRecycle/Components/AuthButton.dart';
+import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
@@ -12,7 +13,8 @@ import 'package:page_transition/page_transition.dart';
 TextEditingController phoneController;
 TextEditingController passwordController;
 
-final usersRef = Firestore.instance.collection('users');
+final usersRef = Firestore.instance.collection('Users');
+final collectorsRef = Firestore.instance.collection('Collectors');
 String s = 'L o g i n';
 
 class Login extends StatefulWidget {
@@ -30,7 +32,7 @@ class _LoginState extends State<Login> {
 
   String address = "";
   bool passvis = true;
-
+  bool isCollector = false;
   String phoneNo;
   String smsOTP;
   String verificationId;
@@ -211,6 +213,15 @@ class _LoginState extends State<Login> {
                                 hintStyle: TextStyle(color: Colors.grey)),
                           ),
                         ),
+                    CheckBox(
+                        btnText: 'I am a collector',
+                        val: isCollector,
+                        change: (val) {
+                          setState(() {
+                            isCollector = val;
+                          });
+                        }),
+                        SizedBox(height: 10),
                         AuthButton(
                           btnText: 'Login',
                           onTap: () {
@@ -263,8 +274,11 @@ class _LoginState extends State<Login> {
         user1 = user;
       }
       if (user1 != null) {
+        if(isCollector) {
+          //Collector's side
+        } else {
         Navigator.push(context,
-            PageTransition(type: PageTransitionType.fade, child: Home()));
+            PageTransition(type: PageTransitionType.fade, child: Home()));}
       } else {
         print(user1.uid);
       }

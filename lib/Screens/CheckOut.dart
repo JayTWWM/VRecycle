@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:VRecycle/Components/DateTimePicker.dart';
+import 'package:VRecycle/Model/Order.dart';
 import 'package:VRecycle/Screens/CheckOut.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -8,11 +9,13 @@ import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/Item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOutPage extends StatefulWidget {
   final List<Item> cart;
@@ -23,17 +26,28 @@ class CheckOutPage extends StatefulWidget {
 
 class _CheckOutPageState extends State<CheckOutPage> {
   Firestore _db = Firestore.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController weightController = TextEditingController();
   File _image;
   TextEditingController locationController = TextEditingController();
   Widget dateTimeField = BasicDateTimeField();
   DateTime userDateTime;
+  final usersRef = Firestore.instance.collection('Users');
+  final collectorsRef = Firestore.instance.collection('Collectors');
   final format = DateFormat("yyyy-MM-dd HH:mm");
   String proof = '';
-  String latitude, longitude;
+  double latitude, longitude;
+  String phoneNumberUser;
   @override
   void initState() {
     super.initState();
+    getUserDetails();
+  }
+
+  void getUserDetails() async {
+    FirebaseUser _user = await _auth.currentUser();
+    phoneNumberUser = _user.phoneNumber.substring(3);
+    print(phoneNumberUser);
   }
 
   Future<void> getUserLocation() async {
@@ -41,8 +55,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
       Position position = await Geolocator()
           .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
-        latitude = position.latitude.toString();
-        longitude = position.longitude.toString();
+        latitude = position.latitude;
+        longitude = position.longitude;
       });
     } catch (e) {
       print("Unable to get Location.");
@@ -50,7 +64,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   }
 
   String getCollector() {
-    return '7506604268';
+    return '9999999999';
   }
 
   @override
@@ -182,10 +196,31 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            await _db
-                                .collection('Orders')
-                                .document()
-                                .setData({});
+                            String collectorNumber = getCollector();
+                            Order order = new Order(
+                                phoneNumberUser: phoneNumberUser,
+                                phoneNumberCollector: collectorNumber,
+                                items: widget.cart,
+                                approxWeight:
+                                    double.parse(weightController.text.trim()),
+                                timestamp: Timestamp.fromDate(userDateTime),
+                                location: GeoPoint(latitude, longitude),
+                                address: locationController.text.trim(),
+                                proof: proof,
+                                status: 'Order Placed');
+                            DocumentReference _docRef =
+                                _db.collection('Orders').document();
+                            _docRef.setData(order.toJson());
+                            usersRef.document(phoneNumberUser).updateData({
+                              'Orders': FieldValue.arrayUnion([_docRef])
+                            });
+                            collectorsRef.document(collectorNumber).updateData({
+                              'Orders': FieldValue.arrayUnion([_docRef])
+                            });
+                            SharedPreferences _prefs =
+                                await SharedPreferences.getInstance();
+                            await _prefs.clear();
+                            Navigator.pop(context);
                           },
                         ),
                       ),

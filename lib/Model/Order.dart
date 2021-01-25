@@ -26,10 +26,14 @@ class Order {
   });
 
   Map<String, dynamic> toJson() {
+    List<String> itemList = [];
+    for(Item a in this.items) {
+      itemList.add(a.toJson());
+    }
     return {
       'phoneNumberUser': this.phoneNumberUser,
       'phoneNumberCollector': this.phoneNumberCollector,
-      'items': this.items,
+      'items': itemList,
       'approxWeight': this.approxWeight,
       'timestamp': this.timestamp,
       'location': this.location,
