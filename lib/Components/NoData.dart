@@ -12,7 +12,7 @@ class NoData extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center, 
           children:[
             Icon(Icons.info_outline, color: Color.fromARGB(255, 105, 115, 124)),
-            Text(this.text, style: TextStyle(color: Color.fromARGB(255, 105, 115, 124), fontWeight:FontWeight.bold))
+            Text(this.text, style: TextStyle(color: Color.fromARGB(255, 105, 115, 124), fontWeight:FontWeight.bold), textAlign: TextAlign.center,)
           ])
     );
   }
