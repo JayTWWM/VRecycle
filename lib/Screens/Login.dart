@@ -4,6 +4,7 @@ import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
+import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -275,7 +276,8 @@ class _LoginState extends State<Login> {
       }
       if (user1 != null) {
         if(isCollector) {
-          //Collector's side
+          Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: CollectorHome()));
         } else {
         Navigator.push(context,
             PageTransition(type: PageTransitionType.fade, child: Home()));}

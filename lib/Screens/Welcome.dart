@@ -1,7 +1,7 @@
 import 'package:VRecycle/Components/FadeAnimations.dart';
 import 'package:VRecycle/Components/SliderAnimations.dart';
 import 'package:VRecycle/Constants/Colors.dart';
-import 'package:VRecycle/Screens/Home.dart';
+import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +80,7 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
                     type: PageTransitionType.fade, child: Slider_animated()));
           } else {
             Navigator.push(context,
-                PageTransition(type: PageTransitionType.fade, child: Home()));
+                PageTransition(type: PageTransitionType.fade, child: CollectorHome()));
           }
         }
       });
