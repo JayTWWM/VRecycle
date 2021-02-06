@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:VRecycle/Components/DateTimePicker.dart';
 import 'package:VRecycle/Model/Order.dart';
 import 'package:VRecycle/Screens/CheckOut.dart';
@@ -63,8 +64,91 @@ class _CheckOutPageState extends State<CheckOutPage> {
     }
   }
 
-  String getCollector() {
-    return '9999999999';
+  double toRadians(double degree) {
+    double one_deg = math.pi / 180;
+    return (one_deg * degree);
+  }
+
+  double distance(double lat1, double long1, double lat2, double long2) {
+    lat1 = toRadians(lat1);
+    long1 = toRadians(long1);
+    lat2 = toRadians(lat2);
+    long2 = toRadians(long2);
+
+    // Haversine Formula
+    double dlong = long2 - long1;
+    double dlat = lat2 - lat1;
+
+    double ans = math.pow(math.sin(dlat / 2), 2) +
+        math.cos(lat1) * math.cos(lat2) * math.pow(math.sin(dlong / 2), 2);
+
+    ans = 2 * math.asin(math.sqrt(ans));
+    double r = 6371;
+
+    ans = ans * r;
+    return ans;
+  }
+
+  Future<List<Map<String, dynamic>>> getSortedCollectors(
+      GeoPoint location) async {
+    QuerySnapshot querySnapshot =
+        await Firestore.instance.collection("Collectors").getDocuments();
+    var documents = querySnapshot.documents;
+    List<Map<String, dynamic>> collectors = new List<Map<String, dynamic>>();
+    documents.forEach((doc) {
+      Map<String, dynamic> collector = doc.data;
+      GeoPoint geo = doc["geopoint"];
+      double dist = distance(
+          location.latitude, location.longitude, geo.latitude, geo.longitude);
+      collector["distance"] = dist;
+      collector["phone_number"] = doc.documentID;
+      collectors.add(collector);
+    });
+    collectors.sort((a, b) => a["distance"].compareTo(b["distance"]));
+    return collectors;
+  }
+
+  Future<String> getCollector(Timestamp pickupTime, GeoPoint location) async {
+    bool flag = true;
+
+    List<Map<String, dynamic>> collectors = new List<Map<String, dynamic>>();
+    collectors = await getSortedCollectors(location);
+    for (int i = 0; i < collectors.length; i++) {
+      print(collectors[i]["geopoint"].latitude.toString() +
+          " " +
+          collectors[i]["geopoint"].longitude.toString() +
+          " " +
+          collectors[i]["phone_number"].toString() +
+          " " +
+          collectors[i]["Orders"].toString());
+    }
+    for (int i = 0; i < collectors.length; i++) {
+      setState(() {
+        flag = true;
+      });
+      String phoneNumber = collectors[i]["phone_number"];
+      try {
+        var list = collectors[i]["Orders"];
+        for (int j = 0; j < list.length; j++) {
+          var diff = pickupTime
+              .toDate()
+              .difference(list[i]["timestamp"].toDate())
+              .inHours;
+          if (diff < 2) {
+            setState(() {
+              flag = false;
+            });
+          }
+        }
+        if (flag == true) {
+          return phoneNumber;
+        }
+      } catch (_) {
+        return phoneNumber;
+      }
+    }
+
+    return 'Could not find a collector.';
   }
 
   @override
@@ -196,30 +280,42 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            String collectorNumber = getCollector();
-                            Order order = new Order(
-                                phoneNumberUser: phoneNumberUser,
-                                phoneNumberCollector: collectorNumber,
-                                items: widget.cart,
-                                approxWeight:
-                                    double.parse(weightController.text.trim()),
-                                timestamp: Timestamp.fromDate(userDateTime),
-                                location: GeoPoint(latitude, longitude),
-                                address: locationController.text.trim(),
-                                proof: proof,
-                                status: 'Order Placed');
-                            DocumentReference _docRef =
-                                _db.collection('Orders').document();
-                            _docRef.setData(order.toJson());
-                            usersRef.document(phoneNumberUser).updateData({
-                              'Orders': FieldValue.arrayUnion([_docRef])
-                            });
-                            collectorsRef.document(collectorNumber).updateData({
-                              'Orders': FieldValue.arrayUnion([_docRef])
-                            });
-                            SharedPreferences _prefs =
-                                await SharedPreferences.getInstance();
-                            await _prefs.clear();
+                            Timestamp pickupTime =
+                                Timestamp.fromDate(userDateTime);
+                            GeoPoint location = GeoPoint(latitude, longitude);
+                            String collectorNumber =
+                                await getCollector(pickupTime, location);
+                            if (collectorNumber ==
+                                'Could not find a collector.') {
+                              Scaffold.of(context).showSnackBar(new SnackBar(
+                                  content: new Text(collectorNumber)));
+                            } else {
+                              Order order = new Order(
+                                  phoneNumberUser: phoneNumberUser,
+                                  phoneNumberCollector: collectorNumber,
+                                  items: widget.cart,
+                                  approxWeight: double.parse(
+                                      weightController.text.trim()),
+                                  timestamp: pickupTime,
+                                  location: location,
+                                  address: locationController.text.trim(),
+                                  proof: proof,
+                                  status: 'Order Placed');
+                              DocumentReference _docRef =
+                                  _db.collection('Orders').document();
+                              _docRef.setData(order.toJson());
+                              usersRef.document(phoneNumberUser).updateData({
+                                'Orders': FieldValue.arrayUnion([_docRef])
+                              });
+                              collectorsRef
+                                  .document(collectorNumber)
+                                  .updateData({
+                                'Orders': FieldValue.arrayUnion([_docRef])
+                              });
+                              SharedPreferences _prefs =
+                                  await SharedPreferences.getInstance();
+                              _prefs.clear();
+                            }
                             Navigator.pop(context);
                           },
                         ),

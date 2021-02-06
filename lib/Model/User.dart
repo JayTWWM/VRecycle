@@ -6,6 +6,7 @@ class User {
   final String email;
   final String imageUrl;
   final String address;
+  final GeoPoint geopoint;
   // final String phonenumber;
 
   User({
@@ -14,15 +15,17 @@ class User {
     @required this.address,
     // @required this.phonenumber,
     @required this.email,
+    @required this.geopoint,
   });
 
   factory User.fromDocument(DocumentSnapshot doc) {
     return User(
-      email: doc['email'],
-      name: doc['name'],
-      imageUrl: doc['imageUrl'],
-      address: doc['address'],
-      // phonenumber: doc['phonenumber'],
-    );
+        email: doc['email'],
+        name: doc['name'],
+        imageUrl: doc['imageUrl'],
+        address: doc['address'],
+        geopoint: doc['geopoint']
+        // phonenumber: doc['phonenumber'],
+        );
   }
 }

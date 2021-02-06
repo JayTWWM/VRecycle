@@ -522,6 +522,17 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  Future<GeoPoint> getCords() async {
+    try {
+      Position position = await Geolocator()
+          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      return GeoPoint(position.latitude, position.longitude);
+    } catch (e) {
+      print("Unable to get Location.");
+      return null;
+    }
+  }
+
   Future<void> createUserInFireStore(FirebaseUser user) async {
     if (isCollector == false) {
       await usersRef.document(phoneController.text).setData({
@@ -530,6 +541,7 @@ class _RegisterState extends State<Register> {
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
+        "geopoint": await getCords()
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
@@ -540,6 +552,7 @@ class _RegisterState extends State<Register> {
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
+        "geopoint": await getCords()
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
