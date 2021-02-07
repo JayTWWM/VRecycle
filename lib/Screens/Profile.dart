@@ -120,8 +120,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                           .imageUrl),
                                                                 ),
                                                                 fit: BoxFit.cover)),
-
-                                                        // ),
                                                       ),
                                                     ),
                                                   ),

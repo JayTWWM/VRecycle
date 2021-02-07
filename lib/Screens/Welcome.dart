@@ -1,11 +1,15 @@
 import 'package:VRecycle/Components/FadeAnimations.dart';
 import 'package:VRecycle/Components/SliderAnimations.dart';
 import 'package:VRecycle/Constants/Colors.dart';
+import 'package:VRecycle/Model/User.dart';
+import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -24,6 +28,9 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
   Animation<double> _positionAnimation;
 
   bool hideIcon = false;
+
+  Firestore _db = Firestore.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -77,10 +84,22 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
             Navigator.push(
                 context,
                 PageTransition(
-                    type: PageTransitionType.fade, child: Slider_animated()));
+                  type: PageTransitionType.fade, child: Slider_animated()
+                )
+            );
           } else {
-            Navigator.push(context,
-                PageTransition(type: PageTransitionType.fade, child: Home()));
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+
+            if(prefs.getString("userType") == "collector"){
+              Navigator.push(context,
+                  PageTransition(type: PageTransitionType.fade, child: CollectorHome())
+              );
+            }else{
+              Navigator.push(context,
+                  PageTransition(type: PageTransitionType.fade, child: Home())
+              );
+            }
+
           }
         }
       });

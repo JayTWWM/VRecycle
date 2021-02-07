@@ -4,11 +4,13 @@ import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
+import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 TextEditingController phoneController;
 TextEditingController passwordController;
@@ -198,7 +200,7 @@ class _LoginState extends State<Login> {
                             autovalidate: av,
                             validator: (value) {
                               if (value.isEmpty) {
-                                return 'Please enter your phone Number';
+                                return 'Please enter your Phone Number';
                               }
                               if (!RegExp(r"^(?=.*\d)[\d]{10}$")
                                   .hasMatch(phoneController.text)) {
@@ -274,11 +276,19 @@ class _LoginState extends State<Login> {
         user1 = user;
       }
       if (user1 != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        
         if(isCollector) {
-          //Collector's side
+          prefs.setString("userType", "collector");
+          Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: CollectorHome())
+          );
         } else {
-        Navigator.push(context,
-            PageTransition(type: PageTransitionType.fade, child: Home()));}
+          prefs.setString("userType", "user");
+          Navigator.push(context,
+            PageTransition(type: PageTransitionType.fade, child: Home())
+          );
+        }
       } else {
         print(user1.uid);
       }
