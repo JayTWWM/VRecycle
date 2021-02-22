@@ -1,6 +1,7 @@
 import 'package:VRecycle/Components/FadeAnimations.dart';
 import 'package:VRecycle/Components/SliderAnimations.dart';
 import 'package:VRecycle/Constants/Colors.dart';
+import 'package:VRecycle/Constants/Constants.dart';
 import 'package:VRecycle/Model/User.dart';
 import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:VRecycle/Screens/Home.dart';
@@ -8,6 +9,7 @@ import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +19,7 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
+  Map<String, dynamic> additionalData;
   AnimationController _scaleController;
   AnimationController _scale2Controller;
   AnimationController _widthController;
@@ -40,6 +43,7 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    initPlatformState();
     super.initState();
     _scaleController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -254,5 +258,36 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    var settings = {
+      OSiOSSettings.autoPrompt: false,
+      OSiOSSettings.promptBeforeOpeningPushUrl: true
+    };
+
+    OneSignal.shared
+        .setNotificationReceivedHandler((OSNotification notification) {
+      additionalData = notification.payload.additionalData;
+      print(additionalData);
+      print("Opened notification: \n${notification.payload.additionalData}");
+    });
+
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      additionalData = result.notification.payload.additionalData;
+      print(additionalData);
+      print(
+          "Opened notification: \n${result.notification.payload.additionalData}");
+    });
+    await OneSignal.shared.init(Constants.oneSignalKey, iOSSettings: settings);
+    print("Subscribed");
+
+    OneSignal.shared
+        .setInFocusDisplayType(OSNotificationDisplayType.notification);
   }
 }
