@@ -541,7 +541,8 @@ class _RegisterState extends State<Register> {
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "geopoint": await getCords()
+        "geopoint": await getCords(),
+        "Orders": []
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
@@ -552,7 +553,8 @@ class _RegisterState extends State<Register> {
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "geopoint": await getCords()
+        "geopoint": await getCords(),
+        "Orders": []
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });

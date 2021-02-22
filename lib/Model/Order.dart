@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Order {
   String phoneNumberUser;
   String phoneNumberCollector;
-  List<Item> items;
+  List<dynamic> items;
   double approxWeight;
   Timestamp timestamp;
   GeoPoint location;
@@ -27,7 +27,7 @@ class Order {
 
   Map<String, dynamic> toJson() {
     List<String> itemList = [];
-    for(Item a in this.items) {
+    for (Item a in this.items) {
       itemList.add(a.toJson());
     }
     return {
@@ -41,5 +41,18 @@ class Order {
       'proof': this.proof,
       'status': this.status
     };
+  }
+
+  factory Order.fromDocument(DocumentSnapshot doc) {
+    return Order(
+        phoneNumberUser: doc['phoneNumberUser'],
+        phoneNumberCollector: doc['phoneNumberCollector'],
+        items: doc['items'],
+        approxWeight: doc['approxWeight'],
+        timestamp: doc['timestamp'],
+        location: doc['location'],
+        address: doc['address'],
+        proof: doc['proof'],
+        status: doc['status']);
   }
 }

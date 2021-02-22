@@ -20,9 +20,10 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
-
 apply plugin: 'com.android.application'
+
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
 apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 29
@@ -64,4 +65,3 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
-apply plugin: 'com.google.gms.google-services'
