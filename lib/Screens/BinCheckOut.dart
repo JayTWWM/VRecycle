@@ -18,14 +18,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CheckOutPage extends StatefulWidget {
-  final List<Item> cart;
-  CheckOutPage({@required this.cart});
+class BinCheckOutPage extends StatefulWidget {
+  List<Item> cart = new List<Item>();
+  final Map bin_location;
+  BinCheckOutPage({Key key, @required this.bin_location}): super(key: key);
   @override
-  _CheckOutPageState createState() => _CheckOutPageState();
+  _BinCheckOutPageState createState() => _BinCheckOutPageState();
 }
 
-class _CheckOutPageState extends State<CheckOutPage> {
+class _BinCheckOutPageState extends State<BinCheckOutPage> {
   Firestore _db = Firestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   TextEditingController weightController = TextEditingController();
@@ -43,6 +44,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
   void initState() {
     super.initState();
     getUserDetails();
+    this.widget.cart.add(
+      new Item(
+        itemName: "Bin Full",
+        desc: "Miscellaneous Items",
+        quantity: 1)
+    );
+
+    this.locationController.text = this.widget.bin_location['readable_location'] + " Bin";
   }
 
   void getUserDetails() async {
@@ -53,11 +62,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
   Future<void> getUserLocation() async {
     try {
-      Position position = await Geolocator()
-          .getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
-        latitude = position.latitude;
-        longitude = position.longitude;
+        latitude = this.widget.bin_location['location'].latitude;
+        longitude = this.widget.bin_location['location'].longitude;
       });
     } catch (e) {
       print("Unable to get Location.");

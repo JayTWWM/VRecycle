@@ -10,7 +10,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -156,18 +155,11 @@ class _HomeState extends State<Home> {
                                         ),
                                       ),
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          PageTransition(
-                                              type: PageTransitionType.leftToRightWithFade,
-                                              child: Profile()
-                                            )
-                                        );
-                                        // setState(() {
-                                        //   mainWidget = Home();
-                                        //   title = "Profile";
-                                        // });
-                                        // Navigator.pop(context);
+                                        setState(() {
+                                          mainWidget = Home();
+                                          title = "Profile";
+                                        });
+                                        Navigator.pop(context);
                                       },
                                     ),
                                   ),

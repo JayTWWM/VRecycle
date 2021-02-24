@@ -8,6 +8,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:VRecycle/Screens/BinCheckOut.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -19,12 +22,93 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   bool hasLoaded = false;
   User currentUser;
   Firestore _db = Firestore.instance;
+  GoogleMapController mapController;
+  final dataKey = new GlobalKey();
+  LatLng _center = LatLng(0, 0);
+  Map<MarkerId, Marker> markers = new Map();
+
+  List bin_locations = new List();
+
+  double latitude, longitude;
+
   @override
   void initState() {
     super.initState();
     getuser();
+    getBinLocations();
+    getUserLocation();
   }
 
+  Future<void> getUserLocation() async {
+    try {
+      Position position = await Geolocator().getLastKnownPosition(desiredAccuracy: LocationAccuracy.high);
+      setState((){
+        latitude = position.latitude;
+        longitude = position.longitude;
+        
+        setMapLocation(latitude, longitude);
+      });
+    } catch (e) {
+      print("Unable to get Location.");
+    }
+  }
+
+  void getBinLocations() async {
+    var binDocs = await _db.collection('bins').getDocuments();
+
+    print("LOOOKKKKYYYYY HEREEEE");
+    binDocs.documents.forEach((element) {
+      bin_locations.add({
+        "readable_location": element.data['readable_location'],
+        "location"         : LatLng(element.data['location'].latitude, element.data['location'].longitude)
+      });
+    });
+
+    print(bin_locations);
+  }
+
+void setMapLocation(latitude, longitude) {
+    _center = LatLng(latitude, longitude);
+
+    int index = 0;
+    for(var record in bin_locations){
+        
+        markers[MarkerId('marker_id_'+index.toString())]= Marker(
+        markerId: MarkerId("marker_id_"+index.toString()),
+        position: record['location'],
+        infoWindow: InfoWindow(
+            title: record['readable_location'],
+            snippet: 'Bin, Click to Request Pickup',
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => BinCheckOutPage(bin_location: record)));
+              print(record['readable_location']);
+            }  
+        ),
+      );
+      index++;
+    }
+  }
+  
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+  
+  getMap() {
+    return Container(
+      width: 400,
+      height: 400,
+      key: dataKey,
+      child: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: _center,
+          zoom: 11.0,
+        ),
+        markers: Set<Marker>.of(markers.values),
+      ),
+    );
+  }
+  
   getuser() async {
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     if (firebaseUser == null) {
@@ -120,8 +204,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                           .imageUrl),
                                                                 ),
                                                                 fit: BoxFit.cover)),
-
-                                                        // ),
                                                       ),
                                                     ),
                                                   ),
@@ -187,6 +269,13 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             ),
                           )),
                     ),
+                    Padding(
+                      child: Text("Bins Near You", textAlign: TextAlign.left,),
+                      padding: EdgeInsets.all(22),
+                    )
+                    ,
+                    //map here
+                    getMap()
                   ]))
             : Loader());
   }

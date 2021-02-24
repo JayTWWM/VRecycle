@@ -4,6 +4,7 @@ import 'package:VRecycle/Constants/Colors.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -99,8 +100,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 
   Widget getOrderImage() {
-    return Image.memory(base64Decode(widget.order["proof"]),
-        width: 380, fit: BoxFit.fill);
+    return Image.memory(base64Decode(widget.order["proof"]), width: 380, fit: BoxFit.fill);
   }
 
   getMap() {
@@ -135,7 +135,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
                     username,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 ),
                 Text(
@@ -145,6 +145,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               ],
             ),
           ),
+          Icon(Icons.delete),
           Text(widget.order["approxWeight"].toString() + " gms"),
         ],
       ),
@@ -259,7 +260,26 @@ class _OrderDetailsState extends State<OrderDetails> {
         ],
       ));
     } else {
-      return (Column());
+      return (Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            color: Color.fromARGB(175, 255, 255, 255),
+            width: double.infinity,
+            height: 60,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text("Completed On " + 
+                  DateFormat('d MMMM y')
+                    .format(widget.order["completed_at"].toDate()) + " " +
+                  DateFormat("jm")
+                    .format( widget.order["completed_at"].toDate() )
+                  )
+                ]),
+          ),
+        ],
+      ));
     }
   }
 
@@ -324,7 +344,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     _db
         .collection('Orders')
         .document(widget.order["id"])
-        .updateData({"status": "Order Completed"}).whenComplete(() => {
+        .updateData({"status": "Order Completed", "completed_at": DateTime. now()}).whenComplete(() => {
               print("Updated"),
               widget.parent.setState(() => {}),
               showDialog<void>(

@@ -3,6 +3,7 @@ import 'package:VRecycle/Components/CircularImage.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Components/MyClipper.dart';
 import 'package:VRecycle/Components/NoData.dart';
+import 'package:VRecycle/Components/CollectorDrawer.dart';
 import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/User.dart';
 import 'package:VRecycle/Screens/ItemsPage.dart';
@@ -32,7 +33,7 @@ class _CollectorHomeState extends State<CollectorHome>
     getUser();
   }
 
-  String title = 'Collector Home Page';
+  String title = 'Your Orders';
   User currentUser;
   bool load = false;
   List<String> categories = [];
@@ -115,136 +116,7 @@ class _CollectorHomeState extends State<CollectorHome>
                     ),
                   ),
                 ),
-                drawer: Drawer(
-                    elevation: 10,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        bottom: 8,
-                      ),
-                      color: Colors.white,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            ClipPath(
-                              clipper: MyClipper(),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.only(top: 80),
-                                decoration: BoxDecoration(
-                                    color: Utils.getColor(primaryColor),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.white,
-                                          blurRadius: 50,
-                                          offset: Offset(0, 0))
-                                    ]),
-                                child: Column(
-                                  children: <Widget>[
-                                    Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 30.0, top: 10, right: 10.0),
-                                        child: GestureDetector(
-                                          child: Hero(
-                                            tag: 'hiHero',
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 10,
-                                                  top: 10,
-                                                  bottom: 10),
-                                              child: CircularImage(
-                                                currentUser.imageUrl != null
-                                                    ? MemoryImage(
-                                                        base64.decode(
-                                                            currentUser
-                                                                .imageUrl),
-                                                      )
-                                                    : AssetImage(
-                                                        "assets/blank_profile.jpg"),
-                                                width: 96,
-                                                height: 96,
-                                              ),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              mainWidget = CollectorHome();
-                                              title = "Profile";
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 50.0),
-                                          child: Text(
-                                            currentUser.name,
-                                            style: new TextStyle(
-                                              fontSize: 30.0,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Pacifico',
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: ListTile(
-                                  leading: Icon(
-                                    Icons.person_pin,
-                                    color: Utils.getColor(
-                                        Utils.getColor(primaryColor)),
-                                    size: 30,
-                                  ),
-                                  title: Text(
-                                    "Profile",
-                                    style: TextStyle(
-                                        color: Utils.getColor(primaryColor),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      mainWidget = Profile();
-                                      title = "Profile";
-                                    });
-                                    Navigator.pop(context);
-                                  }),
-                            ),
-                            Container(
-                              child: ListTile(
-                                  leading: Icon(
-                                    Icons.person_pin,
-                                    color: Utils.getColor(
-                                        Utils.getColor(primaryColor)),
-                                    size: 30,
-                                  ),
-                                  title: Text(
-                                    "Add items ",
-                                    style: TextStyle(
-                                        color: Utils.getColor(primaryColor),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      mainWidget = ItemsPage();
-                                      title = "Items Page";
-                                    });
-                                    Navigator.pop(context);
-                                  }),
-                            ),
-                          ]),
-                    )),
+                drawer: CollectorDrawer(currentUser: currentUser),
                 body: TabBarView(
                   children: [
                     FutureBuilder<List>(
@@ -258,7 +130,9 @@ class _CollectorHomeState extends State<CollectorHome>
                               return new NoData(text: "Loading...");
                             default:
                               if (snapshot.data.length == 0) {
-                                return NoData(text: "No offers for you at the moment.\nPlease Try again later...");
+                                return NoData(
+                                    text:
+                                        "No offers for you at the moment.\nPlease Try again later...");
                               }
 
                               return new ListView.builder(
@@ -274,19 +148,21 @@ class _CollectorHomeState extends State<CollectorHome>
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            OrderDetails(order: snapshot.data[index],parent: this, mode: "offered")
-                                                      )
-                                                )
-                                          },
-                                          child: getCardContents(snapshot, index)
-                                      )
-                                  );
+                                                            OrderDetails(
+                                                                order: snapshot
+                                                                        .data[
+                                                                    index],
+                                                                parent: this,
+                                                                mode:
+                                                                    "offered")))
+                                              },
+                                          child: getCardContents(
+                                              snapshot, index)));
                                 },
                               );
                           }
-                        }
-                      ),
-                      FutureBuilder<List>(
+                        }),
+                    FutureBuilder<List>(
                         future: getAcceptedOrders(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List> snapshot) {
@@ -313,19 +189,21 @@ class _CollectorHomeState extends State<CollectorHome>
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            OrderDetails(order: snapshot.data[index],parent: this, mode: "accepted")
-                                                      )
-                                                )
-                                          },
-                                          child: getCardContents(snapshot, index)
-                                      )
-                                  );
+                                                            OrderDetails(
+                                                                order: snapshot
+                                                                        .data[
+                                                                    index],
+                                                                parent: this,
+                                                                mode:
+                                                                    "accepted")))
+                                              },
+                                          child: getCardContents(
+                                              snapshot, index)));
                                 },
                               );
                           }
-                        }
-                      ),
-                      FutureBuilder<List>(
+                        }),
+                    FutureBuilder<List>(
                         future: getCompletedOrders(),
                         builder: (BuildContext context,
                             AsyncSnapshot<List> snapshot) {
@@ -352,18 +230,20 @@ class _CollectorHomeState extends State<CollectorHome>
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            OrderDetails(order: snapshot.data[index],parent: this, mode: "completed")
-                                                      )
-                                                )
-                                          },
-                                          child: getCardContents(snapshot, index)
-                                      )
-                                  );
+                                                            OrderDetails(
+                                                                order: snapshot
+                                                                        .data[
+                                                                    index],
+                                                                parent: this,
+                                                                mode:
+                                                                    "completed")))
+                                              },
+                                          child: getCardContents(
+                                              snapshot, index)));
                                 },
                               );
                           }
-                        }
-                      )
+                        })
                   ],
                 ),
               ),
@@ -403,8 +283,10 @@ class _CollectorHomeState extends State<CollectorHome>
             ],
           ),
           Spacer(),
-          Image.memory(base64Decode(snapshot.data[index]["proof"]),
-              height: 80, width: 80, fit: BoxFit.fill),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4.0),
+            child: Image.memory(base64Decode(snapshot.data[index]["proof"]), height: 80, width: 80, fit: BoxFit.fill),
+          ),
         ],
       ),
     );
@@ -416,7 +298,7 @@ class _CollectorHomeState extends State<CollectorHome>
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("offered_to", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Placed')
         .getDocuments();
 
@@ -429,14 +311,14 @@ class _CollectorHomeState extends State<CollectorHome>
 
     return final_ray;
   }
-  
+
   Future<List<dynamic>> getAcceptedOrders() async {
     List final_ray = [];
 
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("offered_to", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Accepted')
         .getDocuments();
 
@@ -449,14 +331,14 @@ class _CollectorHomeState extends State<CollectorHome>
 
     return final_ray;
   }
-  
+
   Future<List<dynamic>> getCompletedOrders() async {
     List final_ray = [];
 
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("offered_to", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Completed')
         .getDocuments();
 
