@@ -12,7 +12,7 @@ class Order {
   String address;
   String proof;
   String status;
-
+  List<String> phoneNumberdeclinedCollector;
   Order({
     @required this.phoneNumberUser,
     @required this.phoneNumberCollector,
@@ -23,6 +23,7 @@ class Order {
     @required this.address,
     @required this.proof,
     @required this.status,
+    @required this.phoneNumberdeclinedCollector,
   });
 
   Map<String, dynamic> toJson() {
@@ -39,7 +40,8 @@ class Order {
       'location': this.location,
       'address': this.address,
       'proof': this.proof,
-      'status': this.status
+      'status': this.status,
+      'phoneNumberdeclinedCollector': this.phoneNumberdeclinedCollector
     };
   }
 
@@ -53,6 +55,7 @@ class Order {
         location: doc['location'],
         address: doc['address'],
         proof: doc['proof'],
-        status: doc['status']);
+        status: doc['status'],
+        phoneNumberdeclinedCollector: doc['phoneNumberdeclinedCollector']);
   }
 }

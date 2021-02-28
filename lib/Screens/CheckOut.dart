@@ -40,6 +40,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   String proof = '';
   double latitude, longitude;
   String phoneNumberUser;
+  List<String> empty;
   @override
   void initState() {
     super.initState();
@@ -301,7 +302,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                   location: location,
                                   address: locationController.text.trim(),
                                   proof: proof,
-                                  status: 'Order Placed');
+                                  status: 'Order Placed',
+                                  phoneNumberdeclinedCollector: empty);
                               DocumentReference _docRef =
                                   _db.collection('Orders').document();
                               _docRef.setData(order.toJson());
