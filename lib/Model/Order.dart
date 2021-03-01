@@ -56,6 +56,6 @@ class Order {
         address: doc['address'],
         proof: doc['proof'],
         status: doc['status'],
-        phoneNumberdeclinedCollector: doc['phoneNumberdeclinedCollector']);
+        phoneNumberdeclinedCollector: (doc['phoneNumberdeclinedCollector'] != null) ? doc['phoneNumberdeclinedCollector'].cast<String>() : null);
   }
 }
