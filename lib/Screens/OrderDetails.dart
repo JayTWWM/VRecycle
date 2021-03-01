@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'dart:math' as math;
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -29,6 +30,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   final dataKey = new GlobalKey();
   LatLng _center;
   Map<MarkerId, Marker> markers;
+  final collectorsRef = Firestore.instance.collection('Collectors');
 
   Firestore _db = Firestore.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -341,22 +343,22 @@ class _OrderDetailsState extends State<OrderDetails> {
   );
 
   handleComplete() {
-    _db
-        .collection('Orders')
-        .document(widget.order["id"])
-        .updateData({"status": "Order Completed", "completed_at": DateTime. now()}).whenComplete(() => {
-              print("Updated"),
-              widget.parent.setState(() => {}),
-              showDialog<void>(
-                  context: context,
-                  builder: (ctxt) {
-                    Future.delayed(Duration(seconds: 3), () {
-                      Navigator.of(ctxt).pop(true);
-                      Navigator.pop(context);
-                    });
-                    return completed;
-                  }),
-            });
+    _db.collection('Orders').document(widget.order["id"]).updateData({
+      "status": "Order Completed",
+      "completed_at": DateTime.now()
+    }).whenComplete(() => {
+          print("Updated"),
+          widget.parent.setState(() => {}),
+          showDialog<void>(
+              context: context,
+              builder: (ctxt) {
+                Future.delayed(Duration(seconds: 3), () {
+                  Navigator.of(ctxt).pop(true);
+                  Navigator.pop(context);
+                });
+                return completed;
+              }),
+        });
   }
 
   handleAccept() {
@@ -375,26 +377,144 @@ class _OrderDetailsState extends State<OrderDetails> {
                     });
                     return accepted;
                   }),
-            }
-            );
+            });
   }
 
-  handleDecline() {
-    _db
-        .collection('Orders')
-        .document(widget.order["id"])
-        .updateData({"status": "Order Declined"}).whenComplete(() => {
-              print("Updated"),
-              widget.parent.setState(() => {}),
-              showDialog<void>(
-                  context: context,
-                  builder: (ctxt) {
-                    Future.delayed(Duration(seconds: 3), () {
-                      Navigator.of(ctxt).pop(true);
-                      Navigator.pop(context);
-                    });
-                    return declined;
-                  }),
+  double toRadians(double degree) {
+    double one_deg = math.pi / 180;
+    return (one_deg * degree);
+  }
+
+  double distance(double lat1, double long1, double lat2, double long2) {
+    lat1 = toRadians(lat1);
+    long1 = toRadians(long1);
+    lat2 = toRadians(lat2);
+    long2 = toRadians(long2);
+
+    // Haversine Formula
+    double dlong = long2 - long1;
+    double dlat = lat2 - lat1;
+
+    double ans = math.pow(math.sin(dlat / 2), 2) +
+        math.cos(lat1) * math.cos(lat2) * math.pow(math.sin(dlong / 2), 2);
+
+    ans = 2 * math.asin(math.sqrt(ans));
+    double r = 6371;
+
+    ans = ans * r;
+    return ans;
+  }
+
+  Future<List<Map<String, dynamic>>> getSortedCollectors(
+      GeoPoint location) async {
+    QuerySnapshot querySnapshot =
+        await Firestore.instance.collection("Collectors").getDocuments();
+    var documents = querySnapshot.documents;
+    List<Map<String, dynamic>> collectors = new List<Map<String, dynamic>>();
+    documents.forEach((doc) {
+      Map<String, dynamic> collector = doc.data;
+      GeoPoint geo = doc["geopoint"];
+      double dist = distance(
+          location.latitude, location.longitude, geo.latitude, geo.longitude);
+      collector["distance"] = dist;
+      collector["phone_number"] = doc.documentID;
+      collectors.add(collector);
+    });
+    collectors.sort((a, b) => a["distance"].compareTo(b["distance"]));
+    return collectors;
+  }
+
+  Future<String> getCollector(Timestamp pickupTime, GeoPoint location,
+      List<String> phoneNumberdeclinedCollector) async {
+    bool flag = true;
+
+    List<Map<String, dynamic>> collectors = new List<Map<String, dynamic>>();
+    collectors = await getSortedCollectors(location);
+    // for (int i = 0; i < collectors.length; i++) {
+    //   print(collectors[i]["geopoint"].latitude.toString() +
+    //       " " +
+    //       collectors[i]["geopoint"].longitude.toString() +
+    //       " " +
+    //       collectors[i]["phone_number"].toString() +
+    //       " " +
+    //       collectors[i]["Orders"].toString());
+    // }
+    for (int i = 0; i < collectors.length; i++) {
+      String phoneNumber = collectors[i]["phone_number"];
+      if ((phoneNumberdeclinedCollector != null &&
+              phoneNumberdeclinedCollector.contains(phoneNumber)) ||
+          phoneNumber == widget.order["phoneNumberCollector"]) {
+        continue;
+      }
+      setState(() {
+        flag = true;
+      });
+      try {
+        var list = collectors[i]["Orders"];
+        for (int j = 0; j < list.length; j++) {
+          var diff = pickupTime
+              .toDate()
+              .difference(list[i]["timestamp"].toDate())
+              .inHours;
+          if (diff < 2) {
+            setState(() {
+              flag = false;
             });
+          }
+        }
+        if (flag == true) {
+          return phoneNumber;
+        }
+      } catch (_) {
+        return phoneNumber;
+      }
+    }
+
+    return 'Could not find a collector.';
+  }
+
+  handleDecline() async {
+    String phoneNumberCollector = await getCollector(widget.order["timestamp"],
+        widget.order["location"], widget.order["phoneNumberdeclinedCollector"]);
+    if (phoneNumberCollector == 'Could not find a collector.') {
+      _db
+          .collection('Orders')
+          .document(widget.order["id"])
+          .updateData({"status": "Order Declined"}).whenComplete(() => {
+                print("Updated"),
+                widget.parent.setState(() => {}),
+                showDialog<void>(
+                    context: context,
+                    builder: (ctxt) {
+                      Future.delayed(Duration(seconds: 3), () {
+                        Navigator.of(ctxt).pop(true);
+                        Navigator.pop(context);
+                      });
+                      return declined;
+                    }),
+              });
+    } else {
+      _db.collection('Orders').document(widget.order["id"]).updateData({
+        "phoneNumberCollector": phoneNumberCollector,
+        "phoneNumberdeclinedCollector":
+            FieldValue.arrayUnion([widget.order["phoneNumberCollector"]])
+      }).whenComplete(() => {
+            print("Updated"),
+            widget.parent.setState(() => {}),
+            collectorsRef.document(phoneNumberCollector).updateData({
+              'Orders': FieldValue.arrayUnion(
+                  [_db.collection('Orders').document(widget.order["id"])])
+            }),
+            showDialog<void>(
+                context: context,
+                builder: (ctxt) {
+                  Future.delayed(Duration(seconds: 3), () {
+                    Navigator.of(ctxt).pop(true);
+                    Navigator.pop(context);
+                  });
+                  return declined;
+                }),
+          });
+    }
   }
 }

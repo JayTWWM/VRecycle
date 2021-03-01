@@ -16,6 +16,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckOutPage extends StatefulWidget {
@@ -39,6 +40,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   String proof = '';
   double latitude, longitude;
   String phoneNumberUser;
+  List<String> empty;
   @override
   void initState() {
     super.initState();
@@ -299,7 +301,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
                                   location: location,
                                   address: locationController.text.trim(),
                                   proof: proof,
-                                  status: 'Order Placed');
+                                  status: 'Order Placed',
+                                  phoneNumberdeclinedCollector: empty);
                               DocumentReference _docRef =
                                   _db.collection('Orders').document();
                               _docRef.setData(order.toJson());
@@ -313,6 +316,11 @@ class _CheckOutPageState extends State<CheckOutPage> {
                               });
                               SharedPreferences _prefs =
                                   await SharedPreferences.getInstance();
+                              var fireIns =
+                                  collectorsRef.document(collectorNumber);
+                              DocumentSnapshot doc = await fireIns.get();
+                              String playerId = doc.data["onesignalId"];
+                              _handleNotif(playerId);
                               _prefs.clear();
                             }
                             Navigator.pop(context);
@@ -352,5 +360,15 @@ class _CheckOutPageState extends State<CheckOutPage> {
         proof = downloadUrl;
       });
     }
+  }
+
+  void _handleNotif(String playerId) async {
+    var notification1 = OSCreateNotification(
+        sendAfter: DateTime.now().subtract(DateTime.now().timeZoneOffset),
+        playerIds: [playerId],
+        content: "You've got an order for ${locationController.text.trim()}!!",
+        heading: "GOT AN ORDER!");
+    var response1 = await OneSignal.shared.postNotification(notification1);
+    print("response1 :" + response1.toString());
   }
 }

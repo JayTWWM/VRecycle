@@ -1,3 +1,4 @@
+import 'package:VRecycle/Model/Order.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +8,7 @@ class User {
   final String imageUrl;
   final String address;
   final GeoPoint geopoint;
+  final List<dynamic> orders;
   // final String phonenumber;
 
   User({
@@ -16,6 +18,7 @@ class User {
     // @required this.phonenumber,
     @required this.email,
     @required this.geopoint,
+    @required this.orders,
   });
 
   factory User.fromDocument(DocumentSnapshot doc) {
@@ -24,8 +27,8 @@ class User {
         name: doc['name'],
         imageUrl: doc['imageUrl'],
         address: doc['address'],
-        geopoint: doc['geopoint']
+        geopoint: doc['geopoint'],
         // phonenumber: doc['phonenumber'],
-        );
+        orders: doc['Orders']);
   }
 }

@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 class Order {
   String phoneNumberUser;
   String phoneNumberCollector;
-  List<Item> items;
+  List<dynamic> items;
   double approxWeight;
   Timestamp timestamp;
   GeoPoint location;
   String address;
   String proof;
   String status;
-
+  List<String> phoneNumberdeclinedCollector;
   Order({
     @required this.phoneNumberUser,
     @required this.phoneNumberCollector,
@@ -23,11 +23,12 @@ class Order {
     @required this.address,
     @required this.proof,
     @required this.status,
+    @required this.phoneNumberdeclinedCollector,
   });
 
   Map<String, dynamic> toJson() {
     List<String> itemList = [];
-    for(Item a in this.items) {
+    for (Item a in this.items) {
       itemList.add(a.toJson());
     }
     return {
@@ -39,7 +40,22 @@ class Order {
       'location': this.location,
       'address': this.address,
       'proof': this.proof,
-      'status': this.status
+      'status': this.status,
+      'phoneNumberdeclinedCollector': this.phoneNumberdeclinedCollector
     };
+  }
+
+  factory Order.fromDocument(DocumentSnapshot doc) {
+    return Order(
+        phoneNumberUser: doc['phoneNumberUser'],
+        phoneNumberCollector: doc['phoneNumberCollector'],
+        items: doc['items'],
+        approxWeight: doc['approxWeight'],
+        timestamp: doc['timestamp'],
+        location: doc['location'],
+        address: doc['address'],
+        proof: doc['proof'],
+        status: doc['status'],
+        phoneNumberdeclinedCollector: doc['phoneNumberdeclinedCollector']);
   }
 }

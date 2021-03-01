@@ -4,6 +4,7 @@ import 'package:VRecycle/Components/AuthButton.dart';
 import 'package:VRecycle/Components/CheckBox.dart';
 import 'package:VRecycle/Components/Loader.dart';
 import 'package:VRecycle/Constants/Colors.dart';
+import 'package:VRecycle/Screens/CollectorHome.dart';
 import 'package:VRecycle/Screens/Home.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +17,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 // import 'package:location/location.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 TextEditingController emailController;
 TextEditingController nameController;
@@ -502,11 +505,19 @@ class _RegisterState extends State<Register> {
       } else {
         user1 = user;
       }
-      // print(user1.uid);
+      // print(user1.uid);SharedPreferences prefs = await SharedPreferences.getInstance();
+
       createUserInFireStore(user1);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       if (isCollector) {
-        //Collector's side
+        prefs.setString("userType", "collector");
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.fade, child: CollectorHome()));
       } else {
+        prefs.setString("userType", "user");
+
         Navigator.push(context,
             PageTransition(type: PageTransitionType.fade, child: Home()));
       }
@@ -534,25 +545,35 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
+
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+    var playerId = status.subscriptionStatus.userId;
+    print("PlayerId: " + playerId.toString());
     if (isCollector == false) {
       await usersRef.document(phoneController.text).setData({
+        "onesignalId": playerId.toString(),
+
         "email": emailController.text,
         // "password": passwordController.text, //only for testing purpose
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "geopoint": await getCords()
+        "geopoint": await getCords(),
+        "Orders": []
+
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
     } else {
       await collectorsRef.document(phoneController.text).setData({
+        "onesignalId": playerId.toString(),
         "email": emailController.text,
         // "password": passwordController.text, //only for testing purpose
         "name": nameController.text,
         "address": locationController.text,
         "imageUrl": mediaUrl,
-        "geopoint": await getCords()
+        "geopoint": await getCords(),
+        "Orders": []
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
