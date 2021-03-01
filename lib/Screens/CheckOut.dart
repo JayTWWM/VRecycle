@@ -282,8 +282,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            Timestamp pickupTime =
-                                Timestamp.fromDate(userDateTime);
+                            Timestamp pickupTime = Timestamp.fromDate(userDateTime);
                             GeoPoint location = GeoPoint(latitude, longitude);
                             String collectorNumber =
                                 await getCollector(pickupTime, location);

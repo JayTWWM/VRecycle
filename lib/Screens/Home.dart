@@ -34,33 +34,33 @@ class _HomeState extends State<Home> {
   Future<void> getUser() async {
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
-        .collection('Users')
-        .document(firebaseUser.phoneNumber.substring(3))
-        .get();
-    if (userDoc.exists) {
-      var fireIns = _db
           .collection('Users')
-          .document(firebaseUser.phoneNumber.substring(3));
-      DocumentSnapshot doc = await fireIns.get();
-      User user = User.fromDocument(doc);
-      setState(() {
-        currentUser = user;
-        print(currentUser.address + " " + currentUser.email);
-        load = true;
-      });
-    } else {
-      var fireIns = _db
-          .collection('Collectors')
-          .document(firebaseUser.phoneNumber.substring(3));
-      DocumentSnapshot doc = await fireIns.get();
-      print(doc.data);
-      User user = User.fromDocument(doc);
-      setState(() {
-        currentUser = user;
-        print(currentUser.address + " " + currentUser.email);
-        load = true;
-      });
-    }
+          .document(firebaseUser.phoneNumber.substring(3))
+          .get();
+      if (userDoc.exists) {
+        var fireIns = _db
+            .collection('Users')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          load = true;
+        });
+      } else {
+        var fireIns = _db
+            .collection('Collectors')
+            .document(firebaseUser.phoneNumber.substring(3));
+        DocumentSnapshot doc = await fireIns.get();
+        print(doc.data);
+        User user = User.fromDocument(doc);
+        setState(() {
+          currentUser = user;
+          print(currentUser.address + " " + currentUser.email);
+          load = true;
+        });
+      }
     return null;
   }
 

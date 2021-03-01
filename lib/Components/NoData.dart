@@ -17,3 +17,4 @@ class NoData extends StatelessWidget {
     );
   }
 }
+

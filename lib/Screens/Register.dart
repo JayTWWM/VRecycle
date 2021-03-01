@@ -517,6 +517,7 @@ class _RegisterState extends State<Register> {
                 type: PageTransitionType.fade, child: CollectorHome()));
       } else {
         prefs.setString("userType", "user");
+
         Navigator.push(context,
             PageTransition(type: PageTransitionType.fade, child: Home()));
       }
@@ -544,12 +545,14 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
+
     var status = await OneSignal.shared.getPermissionSubscriptionState();
     var playerId = status.subscriptionStatus.userId;
     print("PlayerId: " + playerId.toString());
     if (isCollector == false) {
       await usersRef.document(phoneController.text).setData({
         "onesignalId": playerId.toString(),
+
         "email": emailController.text,
         // "password": passwordController.text, //only for testing purpose
         "name": nameController.text,
@@ -557,6 +560,7 @@ class _RegisterState extends State<Register> {
         "imageUrl": mediaUrl,
         "geopoint": await getCords(),
         "Orders": []
+
         // "isCollector": isCollector
         // "phonenumber": phoneController.text,
       });
