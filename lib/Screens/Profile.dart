@@ -79,9 +79,32 @@ void setMapLocation(latitude, longitude) {
         infoWindow: InfoWindow(
             title: record['readable_location'],
             snippet: 'Bin, Click to Request Pickup',
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => BinCheckOutPage(bin_location: record)));
-              print(record['readable_location']);
+            onTap: () async {
+              
+              final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+              
+              var docs = await _db.collection("bin_moderator")
+              .where('phone_number', isEqualTo: firebaseUser.phoneNumber.substring(3))
+              .getDocuments();
+              
+              if(docs.documents.length >= 1){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BinCheckOutPage(bin_location: record)));
+                print(record['readable_location']);
+              }else{
+    
+                showDialog<void>(
+                  context: context,
+                  builder: (ctxt) {
+                    return AlertDialog(
+                            title: Text(
+                              'You are not allowed to request bin pickups! Please contact the Administrator',
+                              style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                  });
+     
+              }
             }  
         ),
       );

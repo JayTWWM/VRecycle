@@ -375,7 +375,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                     });
                     return accepted;
                   }),
-            });
+            }
+            );
   }
 
   handleDecline() {
