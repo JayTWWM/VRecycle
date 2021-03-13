@@ -3,7 +3,7 @@ import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/Order.dart';
 import 'package:VRecycle/Model/User.dart';
 import 'package:VRecycle/Screens/HandleAuth.dart';
-import 'package:VRecycle/Screens/OrderWidget.dart';
+import 'package:VRecycle/Components/OrderWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class _OrdersPageState extends State<OrdersPage> with TickerProviderStateMixin {
           DocumentSnapshot doc = await user.orders[i].get();
           Order ord = Order.fromDocument(doc);
           ordersArray.add(ord);
-          print(ord.phoneNumberCollector);
+          // print(ord.phoneNumberCollector);
         }
         setState(() {
           currentUser = user;
@@ -57,12 +57,12 @@ class _OrdersPageState extends State<OrdersPage> with TickerProviderStateMixin {
             .collection('Collectors')
             .document(firebaseUser.phoneNumber.substring(3));
         DocumentSnapshot doc = await fireIns.get();
-        print(doc.data);
+        // print(doc.data);
         User user = User.fromDocument(doc);
         for (int i = 0; i < user.orders.length; i++) {
           // ordersArray.add(user.orders[i]);
         }
-        print(ordersArray);
+        // print(ordersArray);
         setState(() {
           currentUser = user;
           print(currentUser.address + " " + currentUser.email);
