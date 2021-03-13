@@ -2,6 +2,7 @@ import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/Item.dart';
 import 'package:VRecycle/Model/Order.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OrderWidget extends StatefulWidget {
   final Order order;
@@ -17,32 +18,27 @@ class _OrderWidgetState extends State<OrderWidget> {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
+        padding: EdgeInsets.all(10),
         width: MediaQuery.of(context).size.width,
-        height: 100,
         color: Colors.white,
         margin: EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  'Number of Items: ${widget.order.items.length}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'To be picked up at: ${widget.order.timestamp.toDate()}',
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
+            Text(
+              'Number of Items: ${widget.order.items.length}',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
+            Padding(padding: EdgeInsets.all(10)),
+            Text(
+              'Time: ${DateFormat('dd-MM-yyyy kk:mm').format(widget.order.timestamp.toDate())}',
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Padding(padding: EdgeInsets.all(10)),
             Container(
               padding: EdgeInsets.all(10.0),
               decoration: BoxDecoration(
@@ -54,7 +50,11 @@ class _OrderWidgetState extends State<OrderWidget> {
               child: Text(
                 '${widget.order.status}',
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: widget.order.status == "Order Declined"
+                        ? Colors.white
+                        : Colors.black),
               ),
             ),
           ],
