@@ -8,10 +8,13 @@ import 'package:VRecycle/Screens/ItemsPage.dart';
 import 'package:VRecycle/Screens/OrdersPage.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:VRecycle/Components/OrderWidget.dart';
+import 'package:VRecycle/Screens/Welcome.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -267,6 +270,33 @@ class _HomeState extends State<Home> {
                                   title = "Orders Page";
                                 });
                                 Navigator.pop(context);
+                              }),
+                        ),
+                        Container(
+                          child: ListTile(
+                              leading: Icon(
+                                Icons.exit_to_app,
+                                color: Utils.getColor(
+                                    Utils.getColor(primaryColor)),
+                                size: 30,
+                              ),
+                              title: Text(
+                                "Log Out",
+                                style: TextStyle(
+                                    color: Utils.getColor(primaryColor),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onTap: () async {
+                                await FirebaseAuth.instance.signOut();
+                                SharedPreferences _prefs =
+                                    await SharedPreferences.getInstance();
+                                _prefs.clear();
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: Welcome()));
                               }),
                         ),
                         // Container(

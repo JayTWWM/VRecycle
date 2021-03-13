@@ -215,14 +215,14 @@ class _LoginState extends State<Login> {
                                 hintStyle: TextStyle(color: Colors.grey)),
                           ),
                         ),
-                    CheckBox(
-                        btnText: 'I am a collector',
-                        val: isCollector,
-                        change: (val) {
-                          setState(() {
-                            isCollector = val;
-                          });
-                        }),
+                        // CheckBox(
+                        //     btnText: 'I am a collector',
+                        //     val: isCollector,
+                        //     change: (val) {
+                        //       setState(() {
+                        //         isCollector = val;
+                        //       });
+                        //     }),
                         SizedBox(height: 10),
                         AuthButton(
                           btnText: 'Login',
@@ -276,18 +276,16 @@ class _LoginState extends State<Login> {
         user1 = user;
       }
       if (user1 != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        
-        if(isCollector) {
-          prefs.setString("userType", "collector");
-          Navigator.push(context,
-            PageTransition(type: PageTransitionType.fade, child: CollectorHome())
-          );
+        var dummyDoc = await collectorsRef.document(phoneController.text).get();
+        isCollector = dummyDoc.exists;
+        if (isCollector) {
+          Navigator.push(
+              context,
+              PageTransition(
+                  type: PageTransitionType.fade, child: CollectorHome()));
         } else {
-          prefs.setString("userType", "user");
           Navigator.push(context,
-            PageTransition(type: PageTransitionType.fade, child: Home())
-          );
+              PageTransition(type: PageTransitionType.fade, child: Home()));
         }
       } else {
         print(user1.uid);
