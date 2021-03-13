@@ -91,161 +91,155 @@ class _CollectorHomeState extends State<CollectorHome>
   Widget build(BuildContext context) {
     return load == false
         ? Loader()
-        : MaterialApp(
-            home: DefaultTabController(
-              length: 3,
-              child: Scaffold(
-                appBar: AppBar(
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(icon: Text("Offered")),
-                      Tab(icon: Text("Accepted")),
-                      Tab(icon: Text("Completed")),
-                    ],
-                  ),
-                  backgroundColor: Utils.getColor(primaryColor),
-                  elevation: 0.0,
-                  centerTitle: true,
-                  title: Text(
-                    '$title',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'VarelaRound',
-                    ),
-                  ),
-                ),
-                drawer: CollectorDrawer(currentUser: currentUser),
-                body: TabBarView(
-                  children: [
-                    FutureBuilder<List>(
-                        future: getOfferedOrders(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return new Text('Waiting to start');
-                            case ConnectionState.waiting:
-                              return new NoData(text: "Loading...");
-                            default:
-                              if (snapshot.data.length == 0) {
-                                return NoData(
-                                    text:
-                                        "No offers for you at the moment.\nPlease Try again later...");
-                              }
-
-                              return new ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                      margin: EdgeInsets.all(12),
-                                      elevation: 4,
-                                      color: Color.fromARGB(255, 0, 200, 255),
-                                      child: InkWell(
-                                          onTap: () => {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OrderDetails(
-                                                                order: snapshot
-                                                                        .data[
-                                                                    index],
-                                                                parent: this,
-                                                                mode:
-                                                                    "offered")))
-                                              },
-                                          child: getCardContents(
-                                              snapshot, index)));
-                                },
-                              );
-                          }
-                        }),
-                    FutureBuilder<List>(
-                        future: getAcceptedOrders(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return new Text('Waiting to start');
-                            case ConnectionState.waiting:
-                              return new NoData(text: "Loading...");
-                            default:
-                              if (snapshot.data.length == 0) {
-                                return NoData(text: "No Orders Accepted ");
-                              }
-
-                              return new ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                      margin: EdgeInsets.all(12),
-                                      elevation: 4,
-                                      color: Color.fromARGB(255, 255, 165, 0),
-                                      child: InkWell(
-                                          onTap: () => {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OrderDetails(
-                                                                order: snapshot
-                                                                        .data[
-                                                                    index],
-                                                                parent: this,
-                                                                mode:
-                                                                    "accepted")))
-                                              },
-                                          child: getCardContents(
-                                              snapshot, index)));
-                                },
-                              );
-                          }
-                        }),
-                    FutureBuilder<List>(
-                        future: getCompletedOrders(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return new Text('Waiting to start');
-                            case ConnectionState.waiting:
-                              return new NoData(text: "Loading...");
-                            default:
-                              if (snapshot.data.length == 0) {
-                                return NoData(text: "No Orders Completed");
-                              }
-
-                              return new ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                      margin: EdgeInsets.all(12),
-                                      elevation: 4,
-                                      color: Color.fromARGB(255, 248, 63, 154),
-                                      child: InkWell(
-                                          onTap: () => {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OrderDetails(
-                                                                order: snapshot
-                                                                        .data[
-                                                                    index],
-                                                                parent: this,
-                                                                mode:
-                                                                    "completed")))
-                                              },
-                                          child: getCardContents(
-                                              snapshot, index)));
-                                },
-                              );
-                          }
-                        })
+        : DefaultTabController(
+            length: 3,
+            child: Scaffold(
+              appBar: AppBar(
+                bottom: TabBar(
+                  tabs: [
+                    Tab(icon: Text("Offered")),
+                    Tab(icon: Text("Accepted")),
+                    Tab(icon: Text("Completed")),
                   ],
                 ),
+                backgroundColor: Utils.getColor(primaryColor),
+                elevation: 0.0,
+                centerTitle: true,
+                title: Text(
+                  '$title',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'VarelaRound',
+                  ),
+                ),
+              ),
+              drawer: CollectorDrawer(currentUser: currentUser),
+              body: TabBarView(
+                children: [
+                  FutureBuilder<List>(
+                      future: getOfferedOrders(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return new Text('Waiting to start');
+                          case ConnectionState.waiting:
+                            return new NoData(text: "Loading...");
+                          default:
+                            if (snapshot.data.length == 0) {
+                              return NoData(
+                                  text:
+                                      "No offers for you at the moment.\nPlease Try again later...");
+                            }
+
+                            return new ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    margin: EdgeInsets.all(12),
+                                    elevation: 4,
+                                    color: Color.fromARGB(255, 0, 200, 255),
+                                    child: InkWell(
+                                        onTap: () => {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderDetails(
+                                                              order: snapshot
+                                                                  .data[index],
+                                                              parent: this,
+                                                              mode: "offered")))
+                                            },
+                                        child:
+                                            getCardContents(snapshot, index)));
+                              },
+                            );
+                        }
+                      }),
+                  FutureBuilder<List>(
+                      future: getAcceptedOrders(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return new Text('Waiting to start');
+                          case ConnectionState.waiting:
+                            return new NoData(text: "Loading...");
+                          default:
+                            if (snapshot.data.length == 0) {
+                              return NoData(text: "No Orders Accepted ");
+                            }
+
+                            return new ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    margin: EdgeInsets.all(12),
+                                    elevation: 4,
+                                    color: Color.fromARGB(255, 255, 165, 0),
+                                    child: InkWell(
+                                        onTap: () => {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderDetails(
+                                                              order: snapshot
+                                                                  .data[index],
+                                                              parent: this,
+                                                              mode:
+                                                                  "accepted")))
+                                            },
+                                        child:
+                                            getCardContents(snapshot, index)));
+                              },
+                            );
+                        }
+                      }),
+                  FutureBuilder<List>(
+                      future: getCompletedOrders(),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
+                            return new Text('Waiting to start');
+                          case ConnectionState.waiting:
+                            return new NoData(text: "Loading...");
+                          default:
+                            if (snapshot.data.length == 0) {
+                              return NoData(text: "No Orders Completed");
+                            }
+
+                            return new ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Card(
+                                    margin: EdgeInsets.all(12),
+                                    elevation: 4,
+                                    color: Color.fromARGB(255, 248, 63, 154),
+                                    child: InkWell(
+                                        onTap: () => {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OrderDetails(
+                                                              order: snapshot
+                                                                  .data[index],
+                                                              parent: this,
+                                                              mode:
+                                                                  "completed")))
+                                            },
+                                        child:
+                                            getCardContents(snapshot, index)));
+                              },
+                            );
+                        }
+                      })
+                ],
               ),
             ),
           );
@@ -285,7 +279,8 @@ class _CollectorHomeState extends State<CollectorHome>
           Spacer(),
           ClipRRect(
             borderRadius: BorderRadius.circular(4.0),
-            child: Image.memory(base64Decode(snapshot.data[index]["proof"]), height: 80, width: 80, fit: BoxFit.fill),
+            child: Image.memory(base64Decode(snapshot.data[index]["proof"]),
+                height: 80, width: 80, fit: BoxFit.fill),
           ),
         ],
       ),
@@ -298,7 +293,8 @@ class _CollectorHomeState extends State<CollectorHome>
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector",
+            isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Placed')
         .getDocuments();
 
@@ -318,7 +314,8 @@ class _CollectorHomeState extends State<CollectorHome>
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector",
+            isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Accepted')
         .getDocuments();
 
@@ -338,7 +335,8 @@ class _CollectorHomeState extends State<CollectorHome>
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
         .collection('Orders')
-        .where("phoneNumberCollector", isEqualTo: firebaseUser.phoneNumber.substring(3))
+        .where("phoneNumberCollector",
+            isEqualTo: firebaseUser.phoneNumber.substring(3))
         .where('status', isEqualTo: 'Order Completed')
         .getDocuments();
 

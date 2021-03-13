@@ -157,7 +157,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Utils.getColor(primaryColor),
+          backgroundColor: Utils.getColor(appBarColor),
           title: Text("Checkout page")),
       body: Column(
         children: [
@@ -282,7 +282,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            Timestamp pickupTime = Timestamp.fromDate(userDateTime);
+                            Timestamp pickupTime =
+                                Timestamp.fromDate(userDateTime);
                             GeoPoint location = GeoPoint(latitude, longitude);
                             String collectorNumber =
                                 await getCollector(pickupTime, location);

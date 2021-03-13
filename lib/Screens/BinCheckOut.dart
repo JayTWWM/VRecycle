@@ -21,7 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class BinCheckOutPage extends StatefulWidget {
   List<Item> cart = new List<Item>();
   final Map bin_location;
-  BinCheckOutPage({Key key, @required this.bin_location}): super(key: key);
+  BinCheckOutPage({Key key, @required this.bin_location}) : super(key: key);
   @override
   _BinCheckOutPageState createState() => _BinCheckOutPageState();
 }
@@ -44,14 +44,11 @@ class _BinCheckOutPageState extends State<BinCheckOutPage> {
   void initState() {
     super.initState();
     getUserDetails();
-    this.widget.cart.add(
-      new Item(
-        itemName: "Bin Full",
-        desc: "Miscellaneous Items",
-        quantity: 1)
-    );
+    this.widget.cart.add(new Item(
+        itemName: "Bin Full", desc: "Miscellaneous Items", quantity: 1));
 
-    this.locationController.text = this.widget.bin_location['readable_location'] + " Bin";
+    this.locationController.text =
+        this.widget.bin_location['readable_location'] + " Bin";
   }
 
   void getUserDetails() async {
@@ -162,7 +159,7 @@ class _BinCheckOutPageState extends State<BinCheckOutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Utils.getColor(primaryColor),
+          backgroundColor: Utils.getColor(appBarColor),
           title: Text("Checkout page")),
       body: Column(
         children: [
@@ -287,7 +284,8 @@ class _BinCheckOutPageState extends State<BinCheckOutPage> {
                           btnText: 'Place the order',
                           onTap: () async {
                             await getUserLocation();
-                            Timestamp pickupTime = Timestamp.fromDate(userDateTime);
+                            Timestamp pickupTime =
+                                Timestamp.fromDate(userDateTime);
                             GeoPoint location = GeoPoint(latitude, longitude);
                             String collectorNumber =
                                 await getCollector(pickupTime, location);
@@ -306,7 +304,8 @@ class _BinCheckOutPageState extends State<BinCheckOutPage> {
                                   location: location,
                                   address: locationController.text.trim(),
                                   proof: proof,
-                                  status: 'Order Placed');
+                                  status: 'Order Placed',
+                                  phoneNumberdeclinedCollector: []);
                               DocumentReference _docRef =
                                   _db.collection('Orders').document();
                               _docRef.setData(order.toJson());

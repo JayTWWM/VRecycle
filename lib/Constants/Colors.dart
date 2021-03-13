@@ -10,6 +10,7 @@ Color gradientEndColor = Color(0xFF9354B9);
 Color textColor = Colors.blue[900];
 
 Color primaryColor = Color.fromARGB(255, 111, 0, 255);
+Color appBarColor = Color.fromARGB(200, 111, 0, 255);
 Color darkBackgroundColor = Color.fromRGBO(3, 23, 1, 9);
 
 class Utils {

@@ -5,6 +5,7 @@ import 'package:VRecycle/Components/MyClipper.dart';
 import 'package:VRecycle/Constants/Colors.dart';
 import 'package:VRecycle/Model/User.dart';
 import 'package:VRecycle/Screens/ItemsPage.dart';
+import 'package:VRecycle/Screens/OrdersPage.dart';
 import 'package:VRecycle/Screens/Profile.dart';
 import 'package:VRecycle/Screens/OrderWidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
     getUser();
   }
 
-  String title = 'Items Page';
+  String title = 'Profile';
   User currentUser;
   bool load = false;
   List<String> categories = [];
@@ -34,33 +35,33 @@ class _HomeState extends State<Home> {
   Future<void> getUser() async {
     final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
     var userDoc = await _db
+        .collection('Users')
+        .document(firebaseUser.phoneNumber.substring(3))
+        .get();
+    if (userDoc.exists) {
+      var fireIns = _db
           .collection('Users')
-          .document(firebaseUser.phoneNumber.substring(3))
-          .get();
-      if (userDoc.exists) {
-        var fireIns = _db
-            .collection('Users')
-            .document(firebaseUser.phoneNumber.substring(3));
-        DocumentSnapshot doc = await fireIns.get();
-        User user = User.fromDocument(doc);
-        setState(() {
-          currentUser = user;
-          print(currentUser.address + " " + currentUser.email);
-          load = true;
-        });
-      } else {
-        var fireIns = _db
-            .collection('Collectors')
-            .document(firebaseUser.phoneNumber.substring(3));
-        DocumentSnapshot doc = await fireIns.get();
-        print(doc.data);
-        User user = User.fromDocument(doc);
-        setState(() {
-          currentUser = user;
-          print(currentUser.address + " " + currentUser.email);
-          load = true;
-        });
-      }
+          .document(firebaseUser.phoneNumber.substring(3));
+      DocumentSnapshot doc = await fireIns.get();
+      User user = User.fromDocument(doc);
+      setState(() {
+        currentUser = user;
+        print(currentUser.address + " " + currentUser.email);
+        load = true;
+      });
+    } else {
+      var fireIns = _db
+          .collection('Collectors')
+          .document(firebaseUser.phoneNumber.substring(3));
+      DocumentSnapshot doc = await fireIns.get();
+      print(doc.data);
+      User user = User.fromDocument(doc);
+      setState(() {
+        currentUser = user;
+        print(currentUser.address + " " + currentUser.email);
+        load = true;
+      });
+    }
     return null;
   }
 
@@ -94,7 +95,7 @@ class _HomeState extends State<Home> {
         ? Loader()
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: Utils.getColor(primaryColor),
+              backgroundColor: Utils.getColor(appBarColor),
               elevation: 0.0,
               centerTitle: true,
               title: Text(
@@ -118,7 +119,7 @@ class _HomeState extends State<Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         ClipPath(
-                          clipper: MyClipper(),
+                          // clipper: MyClipper(),
                           child: Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.only(top: 80),
@@ -183,6 +184,8 @@ class _HomeState extends State<Home> {
                                           const EdgeInsets.only(bottom: 50.0),
                                       child: Text(
                                         currentUser.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                         style: new TextStyle(
                                           fontSize: 30.0,
                                           fontWeight: FontWeight.bold,
@@ -223,13 +226,13 @@ class _HomeState extends State<Home> {
                         Container(
                           child: ListTile(
                               leading: Icon(
-                                Icons.person_pin,
+                                Icons.shopping_bag,
                                 color: Utils.getColor(
                                     Utils.getColor(primaryColor)),
                                 size: 30,
                               ),
                               title: Text(
-                                "Add items ",
+                                "Add items",
                                 style: TextStyle(
                                     color: Utils.getColor(primaryColor),
                                     fontSize: 20,
@@ -239,6 +242,29 @@ class _HomeState extends State<Home> {
                                 setState(() {
                                   mainWidget = ItemsPage();
                                   title = "Items Page";
+                                });
+                                Navigator.pop(context);
+                              }),
+                        ),
+                        Container(
+                          child: ListTile(
+                              leading: Icon(
+                                Icons.store_mall_directory_sharp,
+                                color: Utils.getColor(
+                                    Utils.getColor(primaryColor)),
+                                size: 30,
+                              ),
+                              title: Text(
+                                "Orders Page",
+                                style: TextStyle(
+                                    color: Utils.getColor(primaryColor),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  mainWidget = OrdersPage();
+                                  title = "Orders Page";
                                 });
                                 Navigator.pop(context);
                               }),

@@ -71,7 +71,7 @@ class _OrderDetailsState extends State<OrderDetails> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Utils.getColor(primaryColor),
+          backgroundColor: Utils.getColor(appBarColor),
           title: Text("Order Details"),
           centerTitle: true,
         ),
@@ -102,7 +102,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 
   Widget getOrderImage() {
-    return Image.memory(base64Decode(widget.order["proof"]), width: 380, fit: BoxFit.fill);
+    return Image.memory(base64Decode(widget.order["proof"]),
+        width: 380, fit: BoxFit.fill);
   }
 
   getMap() {
@@ -272,12 +273,12 @@ class _OrderDetailsState extends State<OrderDetails> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text("Completed On " + 
-                  DateFormat('d MMMM y')
-                    .format(widget.order["completed_at"].toDate()) + " " +
-                  DateFormat("jm")
-                    .format( widget.order["completed_at"].toDate() )
-                  )
+                  Text("Completed On " +
+                      DateFormat('d MMMM y')
+                          .format(widget.order["completed_at"].toDate()) +
+                      " " +
+                      DateFormat("jm")
+                          .format(widget.order["completed_at"].toDate()))
                 ]),
           ),
         ],
