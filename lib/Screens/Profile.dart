@@ -14,8 +14,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:VRecycle/Screens/BinCheckOut.dart';
 
 class Profile extends StatefulWidget {
+  
+  _ProfileState abc = new _ProfileState();
+  
   @override
-  _ProfileState createState() => _ProfileState();
+  _ProfileState createState() => abc;
+
+  Future<void> resetMap() async {
+      print("RESETTING MAP");
+      
+      await abc.getBinLocations();
+      abc.getUserLocation();
+  }
 }
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
@@ -53,7 +63,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     }
   }
 
-  void getBinLocations() async {
+  Future<void> getBinLocations() async {
     var binDocs = await _db.collection('bins').getDocuments();
     binDocs.documents.forEach((element) {
       bin_locations.add({
@@ -67,6 +77,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   void setMapLocation(latitude, longitude) {
     _center = LatLng(latitude, longitude);
     int index = 0;
+    print("LENGTH OF BIN LOCATION " + bin_locations.length.toString());
     for (var record in bin_locations) {
       markers[MarkerId('marker_id_' + index.toString())] = Marker(
         markerId: MarkerId("marker_id_" + index.toString()),
@@ -113,6 +124,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   }
 
   getMap() {
+    print("HEREEEEE");
+    print(markers.values);
     return Container(
       width: 400,
       height: 400,

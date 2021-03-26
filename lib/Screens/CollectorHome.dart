@@ -140,7 +140,8 @@ class _CollectorHomeState extends State<CollectorHome>
                                 return Card(
                                     margin: EdgeInsets.all(12),
                                     elevation: 4,
-                                    color: Color.fromARGB(255, 0, 200, 255),
+                                    color: Colors.blue.shade200,
+                                    // color: Color.fromARGB(125, 0, 200, 255),
                                     child: InkWell(
                                         onTap: () => {
                                               Navigator.push(
@@ -179,7 +180,8 @@ class _CollectorHomeState extends State<CollectorHome>
                                 return Card(
                                     margin: EdgeInsets.all(12),
                                     elevation: 4,
-                                    color: Color.fromARGB(255, 255, 165, 0),
+                                    // color: Color.fromARGB(125, 255, 165, 0),
+                                    color: Colors.yellow.shade800,
                                     child: InkWell(
                                         onTap: () => {
                                               Navigator.push(
@@ -219,7 +221,8 @@ class _CollectorHomeState extends State<CollectorHome>
                                 return Card(
                                     margin: EdgeInsets.all(12),
                                     elevation: 4,
-                                    color: Color.fromARGB(255, 248, 63, 154),
+                                    // color: Color.fromARGB(125, 248, 63, 154),
+                                    color: Colors.pink.shade200,
                                     child: InkWell(
                                         onTap: () => {
                                               Navigator.push(

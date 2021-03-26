@@ -69,7 +69,9 @@ class CollectorDrawer extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CollectorProfile()));
+                                    builder: (context) => CollectorProfile()
+                                )
+                            );
 
                             // Navigator.pop(context);
                           },

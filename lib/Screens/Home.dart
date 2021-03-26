@@ -220,7 +220,10 @@ class _HomeState extends State<Home> {
                               ),
                               onTap: () {
                                 setState(() {
-                                  mainWidget = Profile();
+                                  var tempVar = Profile();
+                                  tempVar.resetMap();
+
+                                  mainWidget = tempVar;
                                   title = "Profile";
                                 });
                                 Navigator.pop(context);

@@ -15,8 +15,7 @@ class CollectorProfile extends StatefulWidget {
   _CollectorProfileState createState() => _CollectorProfileState();
 }
 
-class _CollectorProfileState extends State<CollectorProfile>
-    with TickerProviderStateMixin {
+class _CollectorProfileState extends State<CollectorProfile> with TickerProviderStateMixin {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   bool hasLoaded = false;
   User currentUser;
@@ -89,184 +88,297 @@ class _CollectorProfileState extends State<CollectorProfile>
             drawer: CollectorDrawer(currentUser: currentUser),
             body: Container(
                 child: hasLoaded
-                    ? SingleChildScrollView(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                            ClipPath(
-                              clipper: MyClipper(),
-                              child: Container(
-                                  padding: EdgeInsets.only(top: 10),
-                                  decoration: BoxDecoration(
-                                      color: Utils.getColor(primaryColor),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Utils.getColor(primaryColor),
-                                            blurRadius: 50,
-                                            offset: Offset(0, 0))
-                                      ]),
-                                  child: Container(
-                                    width: double.infinity,
-                                    child: Center(
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(top: 1.0),
-                                              child: new Stack(
-                                                  fit: StackFit.loose,
-                                                  children: <Widget>[
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Hero(
-                                                          tag: "hi",
-                                                          child: AvatarGlow(
-                                                            glowColor:
-                                                                Colors.white,
-                                                            endRadius: 100,
-                                                            child: Material(
-                                                              elevation: 50.0,
-                                                              shape:
-                                                                  CircleBorder(),
-                                                              child: Container(
-                                                                width: 130,
-                                                                height: 130,
-                                                                decoration: BoxDecoration(
-                                                                    shape: BoxShape.circle,
-                                                                    image: DecorationImage(
-                                                                        image: MemoryImage(
-                                                                          base64Decode(
-                                                                              currentUser.imageUrl),
-                                                                        ),
-                                                                        fit: BoxFit.cover)),
+                    // ? SingleChildScrollView(
+                    //     child: Column(
+                    //         crossAxisAlignment: CrossAxisAlignment.start,
+                    //         mainAxisAlignment: MainAxisAlignment.start,
+                    //         children: <Widget>[
+                    //         ClipPath(
+                    //           clipper: MyClipper(),
+                    //           child: Container(
+                    //               padding: EdgeInsets.only(top: 10),
+                    //               decoration: BoxDecoration(
+                    //                   color: Utils.getColor(primaryColor),
+                    //                   boxShadow: [
+                    //                     BoxShadow(
+                    //                         color: Utils.getColor(primaryColor),
+                    //                         blurRadius: 50,
+                    //                         offset: Offset(0, 0))
+                    //                   ]),
+                    //               child: Container(
+                    //                 width: double.infinity,
+                    //                 child: Center(
+                    //                   child: Column(
+                    //                       crossAxisAlignment:
+                    //                           CrossAxisAlignment.center,
+                    //                       mainAxisAlignment:
+                    //                           MainAxisAlignment.center,
+                    //                       children: <Widget>[
+                    //                         Padding(
+                    //                           padding:
+                    //                               EdgeInsets.only(top: 1.0),
+                    //                           child: new Stack(
+                    //                               fit: StackFit.loose,
+                    //                               children: <Widget>[
+                    //                                 Row(
+                    //                                   crossAxisAlignment:
+                    //                                       CrossAxisAlignment
+                    //                                           .center,
+                    //                                   mainAxisAlignment:
+                    //                                       MainAxisAlignment
+                    //                                           .center,
+                    //                                   children: <Widget>[
+                    //                                     Hero(
+                    //                                       tag: "hi",
+                    //                                       child: AvatarGlow(
+                    //                                         glowColor:
+                    //                                             Colors.white,
+                    //                                         endRadius: 100,
+                    //                                         child: Material(
+                    //                                           elevation: 50.0,
+                    //                                           shape:
+                    //                                               CircleBorder(),
+                    //                                           child: Container(
+                    //                                             width: 130,
+                    //                                             height: 130,
+                    //                                             decoration: BoxDecoration(
+                    //                                                 shape: BoxShape.circle,
+                    //                                                 image: DecorationImage(
+                    //                                                     image: MemoryImage(
+                    //                                                       base64Decode(
+                    //                                                           currentUser.imageUrl),
+                    //                                                     ),
+                    //                                                     fit: BoxFit.cover)),
 
-                                                                // ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 40,
-                                                      width: 0,
-                                                      child: Divider(
-                                                        color: Colors
-                                                            .teal.shade700,
-                                                      ),
-                                                    ),
-                                                  ]),
-                                            ),
-                                          ]),
-                                    ),
-                                  )),
+                    //                                             // ),
+                    //                                           ),
+                    //                                         ),
+                    //                                       ),
+                    //                                     ),
+                    //                                   ],
+                    //                                 ),
+                    //                                 SizedBox(
+                    //                                   height: 40,
+                    //                                   width: 0,
+                    //                                   child: Divider(
+                    //                                     color: Colors
+                    //                                         .teal.shade700,
+                    //                                   ),
+                    //                                 ),
+                    //                               ]),
+                    //                         ),
+                    //                       ]),
+                    //                 ),
+                    //               )),
+                    //         ),
+                    //         Row(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           crossAxisAlignment: CrossAxisAlignment.center,
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Padding(
+                    //               padding: EdgeInsets.only(
+                    //                   left: 10, right: 10, top: 5),
+                    //               child: Icon(Icons.person,
+                    //                   color: Colors.black, size: 24),
+                    //             ),
+                    //             Container(
+                    //               margin: const EdgeInsets.only(top: 8),
+                    //               child: Text(
+                    //                 currentUser.name,
+                    //                 style: TextStyle(
+                    //                   fontSize: 24,
+                    //                   fontWeight: FontWeight.w400,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Row(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           crossAxisAlignment: CrossAxisAlignment.end,
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Padding(
+                    //               padding: EdgeInsets.only(left: 10, right: 10),
+                    //               child: Icon(
+                    //                 Icons.email,
+                    //                 color: Colors.red,
+                    //                 size: 24,
+                    //               ),
+                    //             ),
+                    //             Container(
+                    //               margin: const EdgeInsets.only(top: 8),
+                    //               child: Text(
+                    //                 currentUser.email,
+                    //                 style: TextStyle(
+                    //                   fontSize: 24,
+                    //                   fontWeight: FontWeight.w400,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Row(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           crossAxisAlignment: CrossAxisAlignment.center,
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Padding(
+                    //               padding: EdgeInsets.only(
+                    //                   left: 10, right: 10, top: 10),
+                    //               child: Icon(Icons.near_me,
+                    //                   color: Colors.green, size: 24),
+                    //             ),
+                    //             Container(
+                    //               margin: const EdgeInsets.only(top: 8),
+                    //               child: Text(
+                    //                 currentUser.address,
+                    //                 style: TextStyle(
+                    //                   fontSize: 24,
+                    //                   fontWeight: FontWeight.w400,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Row(
+                    //           mainAxisSize: MainAxisSize.min,
+                    //           crossAxisAlignment: CrossAxisAlignment.center,
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Padding(
+                    //               padding: EdgeInsets.only(
+                    //                   left: 10, right: 10, top: 10),
+                    //               child: Icon(Icons.phone,
+                    //                   color: Colors.black, size: 24),
+                    //             ),
+                    //             Container(
+                    //               margin: const EdgeInsets.only(top: 8),
+                    //               child: Text(
+                    //                 phoneNumber,
+                    //                 style: TextStyle(
+                    //                   fontSize: 24,
+                    //                   fontWeight: FontWeight.w400,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       ]))
+
+                    ? ListView(
+                        children: <Widget>[
+                          Container(
+                            height: 250,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.purple.shade900, Colors.deepPurpleAccent],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                stops: [0.5, 0.9],
+                              ),
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 5),
-                                  child: Icon(Icons.person,
-                                      color: Colors.black, size: 24),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    currentUser.name,
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      backgroundColor: Colors.white70,
+                                      minRadius: 60.0,
+                                      child: CircleAvatar(
+                                        radius: 50.0,
+                                        backgroundImage: MemoryImage(
+                                                          base64Decode(
+                                                              currentUser.imageUrl),
+                                                        ),
+                                      ),
                                     ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  currentUser.name,
+                                  style: TextStyle(
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'Collector',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
                                   ),
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  child: Icon(
-                                    Icons.email,
-                                    color: Colors.red,
-                                    size: 24,
+                          ),
+                          Container(
+                            child: Column(
+                              children: <Widget>[
+                                ListTile(
+                                  title: Text(
+                                    'Email',
+                                    style: TextStyle(
+                                      color: Colors.purple.shade900,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  child: Text(
+                                  subtitle: Text(
                                     currentUser.email,
                                     style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 10),
-                                  child: Icon(Icons.near_me,
-                                      color: Colors.green, size: 24),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  child: Text(
+                                Divider(),
+                                ListTile(
+                                  title: Text(
+                                    'Address',
+                                    style: TextStyle(
+                                      color: Colors.purple.shade900,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
                                     currentUser.address,
                                     style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                                Divider(),
+                                ListTile(
+                                  title: Text(
+                                    'Phone',
+                                    style: TextStyle(
+                                      color: Colors.purple.shade900,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    phoneNumber,
+                                    style: TextStyle(
+                                      fontSize: 18,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 10, right: 10, top: 10),
-                                  child: Icon(Icons.phone,
-                                      color: Colors.black, size: 24),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(top: 8),
-                                  child: Text(
-                                    phoneNumber,
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ]))
+                          )
+                        ],
+                      )
+
                     : Loader())));
   }
 }

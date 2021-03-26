@@ -284,8 +284,41 @@ class _LoginState extends State<Login> {
               PageTransition(
                   type: PageTransitionType.fade, child: CollectorHome()));
         } else {
-          Navigator.push(context,
-              PageTransition(type: PageTransitionType.fade, child: Home()));
+          var dummyDoc = await usersRef.document(phoneController.text).get();
+          var isUser = dummyDoc.exists;
+
+          if (isUser) {
+            Navigator.push(context,
+                PageTransition(type: PageTransitionType.fade, child: Home()));
+          } else {
+            setState(() {
+              isloading = false;
+              s = "Login";
+
+              final AlertDialog declined = AlertDialog(
+                title: Text(
+                  'User Not Found! Please Register!',
+                  style: TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                content: CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.red,
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+
+              showDialog<void>(
+                  context: context,
+                  builder: (ctxt) {
+                    return declined;
+                  }
+              );
+            });
+          }
         }
       } else {
         print(user1.uid);
