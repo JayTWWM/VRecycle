@@ -277,8 +277,10 @@ class _LoginState extends State<Login> {
       }
       if (user1 != null) {
         var dummyDoc = await collectorsRef.document(phoneController.text).get();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
         isCollector = dummyDoc.exists;
         if (isCollector) {
+          prefs.setString("userType", "collector");
           Navigator.push(
               context,
               PageTransition(
@@ -288,6 +290,7 @@ class _LoginState extends State<Login> {
           var isUser = dummyDoc.exists;
 
           if (isUser) {
+            prefs.setString("userType", "user");
             Navigator.push(context,
                 PageTransition(type: PageTransitionType.fade, child: Home()));
           } else {
@@ -315,8 +318,7 @@ class _LoginState extends State<Login> {
                   context: context,
                   builder: (ctxt) {
                     return declined;
-                  }
-              );
+                  });
             });
           }
         }

@@ -265,25 +265,32 @@ class _CollectorHomeState extends State<CollectorHome>
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(snapshot.data[index]["address"],
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(255, 255, 255, 1))),
-              SizedBox(height: 8),
-              getOrderTimeDetails(snapshot.data[index]["timestamp"]),
-            ],
+          Container(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(snapshot.data[index]["address"],
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromRGBO(255, 255, 255, 1))),
+                SizedBox(height: 8),
+                getOrderTimeDetails(snapshot.data[index]["timestamp"]),
+              ],
+            ),
           ),
-          Spacer(),
+          // Spacer(),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4.0),
+            borderRadius: BorderRadius.circular(4),
             child: Image.memory(base64Decode(snapshot.data[index]["proof"]),
-                height: 80, width: 80, fit: BoxFit.fill),
+                height: 80,
+                width: MediaQuery.of(context).size.width * 0.2,
+                fit: BoxFit.fill),
           ),
         ],
       ),
@@ -292,63 +299,66 @@ class _CollectorHomeState extends State<CollectorHome>
 
   Future<List<dynamic>> getOfferedOrders() async {
     List final_ray = [];
+    try {
+      final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+      var userDoc = await _db
+          .collection('Orders')
+          .where("phoneNumberCollector",
+              isEqualTo: firebaseUser.phoneNumber.substring(3))
+          .where('status', isEqualTo: 'Order Placed')
+          .getDocuments();
 
-    final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
-    var userDoc = await _db
-        .collection('Orders')
-        .where("phoneNumberCollector",
-            isEqualTo: firebaseUser.phoneNumber.substring(3))
-        .where('status', isEqualTo: 'Order Placed')
-        .getDocuments();
+      for (var docRef in userDoc.documents) {
+        Map final_data = new Map.from(docRef.data);
 
-    for (var docRef in userDoc.documents) {
-      Map final_data = new Map.from(docRef.data);
-
-      final_data.addAll({"id": docRef.documentID});
-      final_ray.add(final_data);
-    }
+        final_data.addAll({"id": docRef.documentID});
+        final_ray.add(final_data);
+      }
+    } catch (e) {}
 
     return final_ray;
   }
 
   Future<List<dynamic>> getAcceptedOrders() async {
     List final_ray = [];
+    try {
+      final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+      var userDoc = await _db
+          .collection('Orders')
+          .where("phoneNumberCollector",
+              isEqualTo: firebaseUser.phoneNumber.substring(3))
+          .where('status', isEqualTo: 'Order Accepted')
+          .getDocuments();
 
-    final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
-    var userDoc = await _db
-        .collection('Orders')
-        .where("phoneNumberCollector",
-            isEqualTo: firebaseUser.phoneNumber.substring(3))
-        .where('status', isEqualTo: 'Order Accepted')
-        .getDocuments();
+      for (var docRef in userDoc.documents) {
+        Map final_data = new Map.from(docRef.data);
 
-    for (var docRef in userDoc.documents) {
-      Map final_data = new Map.from(docRef.data);
-
-      final_data.addAll({"id": docRef.documentID});
-      final_ray.add(final_data);
-    }
+        final_data.addAll({"id": docRef.documentID});
+        final_ray.add(final_data);
+      }
+    } catch (e) {}
 
     return final_ray;
   }
 
   Future<List<dynamic>> getCompletedOrders() async {
     List final_ray = [];
+    try {
+      final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
+      var userDoc = await _db
+          .collection('Orders')
+          .where("phoneNumberCollector",
+              isEqualTo: firebaseUser.phoneNumber.substring(3))
+          .where('status', isEqualTo: 'Order Completed')
+          .getDocuments();
 
-    final FirebaseUser firebaseUser = await firebaseAuth.currentUser();
-    var userDoc = await _db
-        .collection('Orders')
-        .where("phoneNumberCollector",
-            isEqualTo: firebaseUser.phoneNumber.substring(3))
-        .where('status', isEqualTo: 'Order Completed')
-        .getDocuments();
+      for (var docRef in userDoc.documents) {
+        Map final_data = new Map.from(docRef.data);
 
-    for (var docRef in userDoc.documents) {
-      Map final_data = new Map.from(docRef.data);
-
-      final_data.addAll({"id": docRef.documentID});
-      final_ray.add(final_data);
-    }
+        final_data.addAll({"id": docRef.documentID});
+        final_ray.add(final_data);
+      }
+    } catch (e) {}
 
     return final_ray;
   }

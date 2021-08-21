@@ -94,20 +94,18 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
             Navigator.push(
                 context,
                 PageTransition(
-                  type: PageTransitionType.fade, child: Slider_animated()
-                )
-            );
+                    type: PageTransitionType.fade, child: Slider_animated()));
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
-            if(prefs.getString("userType") == "collector"){
+            if (prefs.getString("userType") == "collector") {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: CollectorHome()));
+            } else {
               Navigator.push(context,
-                  PageTransition(type: PageTransitionType.fade, child: CollectorHome())
-              );
-            }else{
-              Navigator.push(context,
-                  PageTransition(type: PageTransitionType.fade, child: Home())
-              );
+                  PageTransition(type: PageTransitionType.fade, child: Home()));
             }
           }
         }
@@ -293,5 +291,4 @@ class _WelcomeState extends State<Welcome> with TickerProviderStateMixin {
     OneSignal.shared
         .setInFocusDisplayType(OSNotificationDisplayType.notification);
   }
-
 }
