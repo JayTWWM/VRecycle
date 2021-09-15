@@ -545,7 +545,6 @@ class _RegisterState extends State<Register> {
   }
 
   Future<void> createUserInFireStore(FirebaseUser user) async {
-
     var status = await OneSignal.shared.getPermissionSubscriptionState();
     var playerId = status.subscriptionStatus.userId;
     print("PlayerId: " + playerId.toString());

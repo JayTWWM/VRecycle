@@ -3,7 +3,8 @@ import 'package:VRecycle/Screens/Login.dart';
 import 'package:VRecycle/Screens/Register.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+// import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class HandleAuth extends StatefulWidget {
   @override
@@ -36,14 +37,22 @@ class _HandleAuthState extends State<HandleAuth> {
   void initState() {
     super.initState();
 
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          _keyboardVisible = visible;
-          print("Keyboard State Changed : $visible");
-        });
-      },
-    );
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool visible) {
+      setState(() {
+        _keyboardVisible = visible;
+        print("Keyboard State Changed : $visible");
+      });
+    });
+
+    // KeyboardVisibilityNotification().addNewListener(
+    //   onChange: (bool visible) {
+    // setState(() {
+    //   _keyboardVisible = visible;
+    //   print("Keyboard State Changed : $visible");
+    // });
+    //   },
+    // );
   }
 
   @override
