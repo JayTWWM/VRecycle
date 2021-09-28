@@ -78,7 +78,6 @@ class _LoginState extends State<Login> {
             FirebaseUser firebaseUser = res.user;
             print(firebaseUser);
             login(context, firebaseUser);
-            Navigator.pop(context);
           },
           verificationFailed: (AuthException e) {
             toast('${e.message}');
@@ -340,5 +339,6 @@ class _LoginState extends State<Login> {
       }
       print(e);
     }
+    Navigator.pop(context);
   }
 }
