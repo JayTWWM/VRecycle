@@ -1,16 +1,22 @@
-# VRecycle
+### Vrecycle - Recyclable Waste Management Solution
+Vrecycle is a recyclable waste management solution developed as a group project for Sardar Patel Institute of Technology. The application connects two endpoints: waste collectors and common household people, facilitating the scheduling of recyclable waste pickups.
 
-A new Flutter project.
+#### Functionality
+1) Scheduling Pickups: Users can schedule recyclable waste pickups by entering the loction of pickup, volume and weight of the waste and type of waste. 
+2) Assignment Algorithm: An algorithm assigns waste collectors to specific orders based on the amount of waste and location.
+3) Collector Notification: Waste collectors are notified of their assignments and can either accept or reject the request based on their availability. Rejected requests are reassigned to the next suitable collector.
+4) Recyclable Bins: Recyclable bins have been set up on campus, and any student can request a pickup once they are full.
 
-## Getting Started
+#### Technologies Used
+1) Flutter: Front-end development framework used for building the mobile application.
+2) Firebase: Cloud-based database used for storing user data and managing real-time updates.
 
-This project is a starting point for a Flutter application.
+#### Deployment
+The application has been published to the Google Play Store for public use. 
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Installation
+To run the application locally, follow these steps:
+1) Clone the repository: git clone 
+2) Navigate to the project directory: cd vrecycle
+3) Install dependencies: flutter pub get
+4) Run the application: flutter run
